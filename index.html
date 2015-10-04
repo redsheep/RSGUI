@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>hello phaser!</title>
+      <script src="phaser.min.js"></script>
+  		<script src="guiFactory.js"></script>
+      <script src="ninepatch/assetCtrl.js"></script>
+  		<script src="GUIContainer.js"></script>
+  		<script src="GUIObject.js"></script>
+  		<script src="ninepatch.js"></script>
+  		<script src="ninepatch/button.js"></script>
+  		<script src="ninepatch/scrollbar.js"></script>
+  		<script src="ninepatch/window.js"></script>
+  		<script src="ninepatch/checkbox.js"></script>
+  		<script src="ninepatch/textInput.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+    window.onload = function() {
+      var bmd;
+      var game = new Phaser.Game(480, 320, Phaser.AUTO, '', { preload: preload, create: create });
+      game.gui=new AssetCtrl(game);
+      game.gui.loadTheme('theme.json');
+      function preload () {
+        game.gui.loadAsset();
+      }
+      function create () {
+        game.stage.backgroundColor = 0xcccccc;
+        var buttons=game.gui.add.window(80,0,300,200,"window");
+        var button3=game.gui.add.scrollbar(20,70,buttons);
+        var button2=game.gui.add.button(0,0,"button",buttons);
+        var button4=game.gui.add.checkbox(20,50,"checkbox",buttons);
+        var button5=game.gui.add.textinput(20,110,"text",buttons);
+      }
+
+    };
+    function down(sprite,pointer){
+      console.log(sprite.key);
+    }
+    </script>
+
+    </body>
+</html>
