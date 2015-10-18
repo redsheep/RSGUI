@@ -1,136 +1,75 @@
 //  Here is a custom game object
-CheckBox = function (game, x, y, radius, border, text) {
+RadioBox = function (game, x, y, radius, border, text) {
+	this._box=24;
+	this._seprate=2;
+	this._text=text;
+	var txtsize=getTextSize('Arial',16,text);
+	var height=2*radius+txtsize.height;
+	var width=height+this._seprate+txtsize.width;
+	GUIObject.call(this, game, x, y, width, height, text);
 
 	this._border=border;
-	var style = { font: "bold 16px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle" };
-	this._text = new Phaser.Text(game, 0, 0, text, style);
-	this._radius=this._text.height/4;
-	var height=2*border+this._text.height;
-	var width=this._text.height+2*border+2*this._radius+this._text.width;
-	this._bmd = new Phaser.BitmapData(game, '', width, height);
-	Phaser.Sprite.call(this, game, x, y, this._bmd);
-	
-	this.x=x;this.y=y;
-	this._seprate=2;
-	this.width=width+this._seprate;
-	this.height=height;
+	this._radius=radius;
 	this._check=false;
-	
-	
-	this.inputEnabled = true;
-	//  Redirect the input events to here so we can handle animation updates, etc
-    //this.events.onInputOver.add(this.onInputOverHandler, this);
-    //this.events.onInputOut.add(this.onInputOutHandler, this);
-    this.events.onInputDown.add(this.onInputDownHandler, this);
-    this.events.onInputUp.add(this.onInputUpHandler, this);
+	this._onFrame = "rsgui-check-on";
+	this._offFrame = "rsgui-check-off";
+	this._frame=this._offFrame;
+	this._hasTexture=true;
 };
-CheckBox.prototype = Object.create(Phaser.Sprite.prototype);
-CheckBox.prototype.constructor = CheckBox;
-CheckBox.prototype.update = function() {
-	this.draw();
-};
-CheckBox.prototype.draw=function(){
+RadioBox.prototype = Object.create(GUIObject.prototype);
+RadioBox.prototype.constructor = CheckBox;
+RadioBox.prototype.drawCanvas=function(){
 	var b=this._border;
 	var r=this._radius;
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var c=h+this._seprate;
 	this._bmd.cls();
 	this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
 	this._bmd.ctx.fillStyle= "#000";
-	this._bmd.ctx.roundRect(0, 0, this.height, this.height, r, true);
+	this._bmd.ctx.roundRect(b, b, h-2*b, h-2*b, r, true);
 	if(this._check){
 		this._bmd.ctx.fillStyle= "#fff";
-		this._bmd.ctx.roundRect(r, r, this.height-2*r, this.height-2*r, 1, true);
-	}//else{
-		//this._bmd.ctx.roundRect(b, b, this.width-2*b, this.height-2*b, r, true);
-	//}
-	this._bmd.draw(this._text, this.height+this._seprate, r, null, null, 'normal');
-}
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputOverHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-CheckBox.prototype.onInputOverHandler = function (sprite, pointer) {
-
-    //  If the Pointer was only just released then we don't fire an over event
-    if (pointer.justReleased())
-    {
-        return;
-    }
-
-    this._state='over';
-
-    if (this.onOverMouseOnly && !pointer.isMouse)
-    {
-        return;
-    }
-
-    if (this.onInputOver)
-    {
-        this.onInputOver.dispatch(this, pointer);
-    }
-
-};
-
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputOutHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-CheckBox.prototype.onInputOutHandler = function (sprite, pointer) {
-
-    this._state='up';
-
-    if (this.onInputOut)
-    {
-        this.onInputOut.dispatch(this, pointer);
-    }
-};
-
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputDownHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-CheckBox.prototype.onInputDownHandler = function (sprite, pointer) {
-
-    if(this._check){
-		this._check=false;
-	}else{
-		this._check=true;
+		this._bmd.ctx.roundRect(r, r, h-2*r, h-2*r, 1, true);
 	}
-
-    if (this.onInputDown)
-    {
-        this.onInputDown.dispatch(this, pointer);
-    }
+	this._bmd.ctx.font="16px Arial";
+	this._bmd.ctx.fillStyle="#fff";
+	this._bmd.ctx.textBaseline="top"
+	this._bmd.ctx.fillText(this._text, c, r);
+}
+RadioBox.prototype.drawTexture=function(){
+	var b=this._border;
+	var r=this._radius;
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var c=h+this._seprate;
+	this._bmd.cls();
+	var W=this.game.cache.getImage(this._frame).width;
+	var H=this.game.cache.getImage(this._frame).height;
+	this._bmd.copy(this._frame,0,0,W,H,0,0,h,h);
+	this._bmd.ctx.font="16px Arial";
+	this._bmd.ctx.fillStyle="#fff";
+	this._bmd.ctx.textBaseline="top"
+	this._bmd.ctx.fillText(this._text, c, r);
+}
+RadioBox.prototype.onInputDownHandler = function (sprite, pointer) {
+	if(this._check) this.uncheck();
+	else this.check();
+	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
-
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputUpHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-CheckBox.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
-    //  Input dispatched early, before state change (but after sound)
-    if (this.onInputUp)
-    {
-        this.onInputUp.dispatch(this, pointer, isOver);
-    }
-    if (this.freezeFrames)
-    {
-        return;
-    }
-};
-
+RadioBox.prototype.check=function(){
+	this._check=true;
+	this._frame=this._onFrame;
+	if(this.parent!=null){
+		for(i=0;i<this.parent.children.length;i++){
+			var child=this.parent.children[i];
+			if(child!=this && child.group==this.group){
+				child.uncheck();
+			}
+		}
+	}
+}
+RadioBox.prototype.uncheck=function(){
+	this._check=false;
+	this._frame=this._offFrame;
+}

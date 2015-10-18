@@ -1,137 +1,92 @@
 //  Here is a custom game object
 Window = function (game, x, y, width, height, text) {
 
-	this._text = new Phaser.Text(game, 0, 0, text, { font: "bold 16px Arial", fill: "#000"});
+	this._text = text;//new Phaser.Text(game, 0, 0, text, { font: "bold 16px Arial", fill: "#000"});
 
-	GUIContainer.call(this, game, x, y+32, width, height);
+	GUIObject.call(this, game, x, y+32, width, height);
 
-	this._titleBarbmd = new Phaser.BitmapData(game, '', width, 32);
-	this._titleBar = game.add.sprite(x,y,this._titleBarbmd);
-	this._panel = game.add.sprite(x,y+32,this._bmd);
+	//this._titleBarbmd = new Phaser.BitmapData(game, '', width, 32);
+	//this._titleBar = game.add.sprite(x,y,this._titleBarbmd);
+	//this._panel = game.add.sprite(x,y+32,this._bmd);
 
-	this._titleBar.width=width;
-	this._titleBar.height=32;
-	this._titleBar.inputEnabled = true;
-	this._titleBar.input.enableDrag();
+	this._title_height=32;
+	this._radius=24;
+	this._border=1;
+	this._window_bg="rsgui-window-bg";
+	this._window_title="rsgui-window-title";
+	this.anchor.setTo(0.5,0.5);
+	//this._title_offset = theme.window.title.offset;
+	//this._panel_offset = theme.window.bg.offset;
+	this._hasTexture=true;
+	//this._titleBar.width=width;
+	//this._titleBar.height=32;
+	this.inputEnabled = true;
+	this.input.enableDrag();
 	//this.events.onInputOver.add(this.onInputOverHandler, this);
 	//this.events.onInputOut.add(this.onInputOutHandler, this);
-	this._titleBar.events.onInputDown.add(this.onInputDownHandler, this);
-	this._titleBar.events.onInputUp.add(this.onInputUpHandler, this);
+	this.events.onInputDown.add(this.onInputDownHandler, this);
+	this.events.onInputUp.add(this.onInputUpHandler, this);
+
+	this.onShow =new Phaser.Signal();
+	this.onClose=new Phaser.Signal();
 };
-Window.prototype = Object.create(GUIContainer.prototype);
+Window.prototype = Object.create(GUIObject.prototype);
 Window.prototype.constructor = Window;
 Window.prototype.update = function() {
-	this.draw();
-	if(this._state=='down'){
-		this.x=this._titleBar.x;
-		this.y=this._titleBar.y+32;
-		this._panel.x=this.x;
-		this._panel.y=this.y;
-	}
-	GUIContainer.prototype.update.call(this);
+	GUIObject.prototype.update.call(this);
+	Phaser.Group.prototype.update.call(this);
 };
-Window.prototype.draw=function(){
-	GUIContainer.prototype.draw.call(this);
-	this._titleBarbmd.cls();
+Window.prototype.drawCanvas=function(){
+	//GUIContainer.prototype.draw.call(this);
+	this._bmd.cls();
 	if(this._focus){
-		this._titleBarbmd.ctx.fillStyle= "#666";
+		this._bmd.ctx.fillStyle= "#666";
 	}else{
-		this._titleBarbmd.ctx.fillStyle= "#999";
+		this._bmd.ctx.fillStyle= "#999";
 	}
-	this._titleBarbmd.ctx.roundRect(0, 0, this._width, 32, 12, true, 'up');
-	this._titleBarbmd.draw(this._text, 12, 6, null, null, 'normal');
+	this._bmd.ctx.roundRect(0, 0, this.width, 32, 12, true, 'up');
+	//this._bmd.draw(this._text, 12, 6, null, null, 'normal');
 	//this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
 	this._bmd.ctx.fillStyle= "#ddd";
-	this._bmd.ctx.roundRect(0, 0, this._width, this._height, 12, true,'down');
+	this._bmd.ctx.roundRect(0, this._title_height, this.width,
+		 this.height-this._title_height, 12, true,'down');
 }
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputOverHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-Window.prototype.onInputOverHandler = function (sprite, pointer) {
+Window.prototype.drawTexture=function(){
+	this._bmd.cls();
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var th=this._title_height;
+	var r=this._radius;
+	var W=this.game.cache.getImage(this._window_bg).width;
+	var H=this.game.cache.getImage(this._window_bg).height;
+	this._bmd.generateNinePatchTexture(this._window_bg,0,th/2,w,h-th/2,r,W,H);
+	var TW=this.game.cache.getImage(this._window_title).width;
+	var TH=this.game.cache.getImage(this._window_title).height;
+	var TX=this._width/2-TW/2;
+	//this._titleBarbmd.copy(this._window_title,0,0,TW,TH,TX,0,TW,32);
+	//this._bmd.ctx.globalCompositeOperation
+	this._bmd.generateThreePatchTexture(this._window_title,0,0,
+		w,th,TH,TW,TH);
+	//this._bmd.draw(this._text, r, r, null, null, 'normal');
+}
+Window.prototype.addChild=function(object){
+	Phaser.Group.prototype.addChild.call(this,object);
+	object.x-=this._originWidth*this.anchor.x;
+	object.y-=this._originHeight*this.anchor.y;
+	object.y+=this._title_height;
+	object.input.priorityID=this.children.length+1;
+}
+Window.prototype.removeChild=function(object){
+		Phaser.Group.prototype.removeChild.call(this,object);
+		object.y-=this._title_height;
+}
+Window.prototype.show=function(){
+	this.game.add.tween(this.scale).to( { x: 1.0, y:1.0 }, 2000, Phaser.Easing.Linear.None, true, 0);
+	//this.game.add.tween(this).to( { alpha: 1.0 }, 2000, Phaser.Easing.Linear.None, true, 1000);
+}
 
-    //  If the Pointer was only just released then we don't fire an over event
-    if (pointer.justReleased())
-    {
-        return;
-    }
-
-    this._state='over';
-
-    if (this.onOverMouseOnly && !pointer.isMouse)
-    {
-        return;
-    }
-
-    if (this.onInputOver)
-    {
-        this.onInputOver.dispatch(this, pointer);
-    }
-
-};
-
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputOutHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-Window.prototype.onInputOutHandler = function (sprite, pointer) {
-
-    this._state='up';
-
-    if (this.onInputOut)
-    {
-        this.onInputOut.dispatch(this, pointer);
-    }
-};
-
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputDownHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-Window.prototype.onInputDownHandler = function (sprite, pointer) {
-
-this._state='down';
-    if(this._check){
-		this._check=false;
-	}else{
-		this._check=true;
-	}
-
-    if (this.onInputDown)
-    {
-        this.onInputDown.dispatch(this, pointer);
-    }
-};
-
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputUpHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
-Window.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
-    //  Input dispatched early, before state change (but after sound)
-    this._state='up';
-		if (this.onInputUp)
-    {
-        this.onInputUp.dispatch(this, pointer, isOver);
-    }
-    if (this.freezeFrames)
-    {
-        return;
-    }
-};
+Window.prototype.hide=function(){
+	//konwn issue, scale to zero will cause input handler error
+	this.game.add.tween(this.scale).to( { x: 0.0001, y:0.0001 }, 2000, Phaser.Easing.Linear.None, true, 0);
+	//this.game.add.tween(this).to( { alpha: 0.0 }, 2000, Phaser.Easing.Linear.None, true, 1000);
+}

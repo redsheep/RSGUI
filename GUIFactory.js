@@ -7,16 +7,17 @@ RSCanvasGUI = function(game){
 //RSCanvasGUI.prototype = Object.create(Phaser.Group.prototype);
 RSCanvasGUI.prototype.constructor = RSCanvasGUI;
 
-AssetCtrl = function(game){
+CanvasCtrl = function(game){
 	//Phaser.Group.call(this, game);
 	this.game = game;
 	this.add = null;
+	this.add=new CanvasCtrlFactory(game);
 	//this.asset = new AssetCtrlFactory(game.world,game);
 	//this.game.world.add(this);
 }
 //RSCanvasGUI.prototype = Object.create(Phaser.Group.prototype);
-AssetCtrl.prototype.constructor = AssetCtrl;
-AssetCtrl.prototype.loadAsset=function(){
+CanvasCtrl.prototype.constructor = CanvasCtrl;
+CanvasCtrl.prototype.loadAsset=function(){
 	var self=this;
 	this.game.load.image('rsgui-button-up', this.theme.button.up.path);
 	this.game.load.image('rsgui-button-down', this.theme.button.down.path);
@@ -26,11 +27,11 @@ AssetCtrl.prototype.loadAsset=function(){
 	this.game.load.image('rsgui-scroll-btn', this.theme.scrollbar.button.path);
 	this.game.load.image('rsgui-window-bg', this.theme.window.bg.path);
 	this.game.load.image('rsgui-window-title', this.theme.window.title.path);
-	this.game.load.onLoadComplete.addOnce(function(){
-		self.add=new AssetCtrlFactory(self.game,self.theme);
-	})
+	//this.game.load.onLoadComplete.addOnce(function(){
+	//	self.add=new CanvasCtrlFactory(self.game,self.theme);
+	//});
 }
-AssetCtrl.prototype.loadTheme=function(url){
+CanvasCtrl.prototype.loadTheme=function(url){
 	var self=this;
 	var xobj = new XMLHttpRequest();
 	xobj.overrideMimeType("application/json");
@@ -38,11 +39,12 @@ AssetCtrl.prototype.loadTheme=function(url){
 	xobj.onreadystatechange = function () {
 		if (xobj.readyState == 4 && xobj.status == "200") {
 			// Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-			self.setImages(xobj.responseText);
+			self.setTheme(xobj.responseText);
 		}
 	};
 	xobj.send(null);
 }
-AssetCtrl.prototype.setImages=function(data){
-	this.theme = JSON.parse(data);
+CanvasCtrl.prototype.setTheme=function(data){
+	this.theme=JSON.parse(data);
+	this.add.setTheme(this.theme);
 }

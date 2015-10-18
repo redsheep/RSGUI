@@ -4,41 +4,46 @@
       <meta charset="UTF-8" />
       <title>hello phaser!</title>
       <script src="phaser.min.js"></script>
-  		<script src="guiFactory.js"></script>
-      <script src="ninepatch/assetCtrl.js"></script>
+  		<script src="GUIFactory.js"></script>
   		<script src="GUIContainer.js"></script>
   		<script src="GUIObject.js"></script>
-  		<script src="ninepatch.js"></script>
-  		<script src="ninepatch/button.js"></script>
-  		<script src="ninepatch/scrollbar.js"></script>
-  		<script src="ninepatch/window.js"></script>
-  		<script src="ninepatch/checkbox.js"></script>
-  		<script src="ninepatch/textInput.js"></script>
+      <script src="canvas/canvasCtrl.js"></script>
+  		<script src="canvas/button.js"></script>
+  		<script src="canvas/scrollbar.js"></script>
+  		<script src="canvas/window.js"></script>
+  		<script src="canvas/checkbox.js"></script>
+  		<script src="canvas/radiobox.js"></script>
+  		<script src="canvas/textInput.js"></script>
     </head>
     <body>
 
     <script type="text/javascript">
-    window.onload = function() {
-      var bmd;
-      var game = new Phaser.Game(480, 320, Phaser.AUTO, '', { preload: preload, create: create });
-      game.gui=new AssetCtrl(game);
+    //window.onload = function() {
+      var button2;var button4;
+      var game = new Phaser.Game(480, 320, Phaser.CANVAS, '', { preload: preload,create: create});
+      game.gui=new CanvasCtrl(game);
       game.gui.loadTheme('theme.json');
       function preload () {
         game.gui.loadAsset();
       }
       function create () {
         game.stage.backgroundColor = 0xcccccc;
-        var buttons=game.gui.add.window(80,0,300,200,"window");
-        var button3=game.gui.add.scrollbar(20,70,buttons);
-        var button2=game.gui.add.button(0,0,"button",buttons);
-        var button4=game.gui.add.checkbox(20,50,"checkbox",buttons);
-        var button5=game.gui.add.textinput(20,110,"text",buttons);
+        button4=game.gui.add.button(0,0,"button");
+        button2=game.gui.add.button(100,0,"textbutton");
+        var buttons=game.gui.add.window(180,100,300,200,"window");
+        //var button3=game.gui.add.scrollbar(20,70);
+        var button3=game.gui.add.radiobox(20,50,"checkbox",buttons);
+        //var button5=game.gui.add.textinput(20,110,"text",buttons);
+        //button3.group='group1';
+        //buttons.show();
+        button2.events.onInputDown.add(function(){
+          buttons.hide();
+        },this);
+        button4.events.onInputDown.add(function(){
+          buttons.show();
+        },this);
       }
-
-    };
-    function down(sprite,pointer){
-      console.log(sprite.key);
-    }
+    //};
     </script>
 
     </body>
