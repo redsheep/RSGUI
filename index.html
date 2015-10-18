@@ -19,30 +19,49 @@
 
     <script type="text/javascript">
     //window.onload = function() {
-      var button2;var button4;
-      var game = new Phaser.Game(480, 320, Phaser.CANVAS, '', { preload: preload,create: create});
+      var game = new Phaser.Game(480, 320, Phaser.CANVAS, '');
       game.gui=new CanvasCtrl(game);
       game.gui.loadTheme('theme.json');
-      function preload () {
-        game.gui.loadAsset();
+      first_state={
+        preload:function() {
+          game.gui.loadAsset();
+        },
+        create:function() {
+          game.stage.backgroundColor = 0xcccccc;
+          button4=game.gui.add.button(0,0,"showWindow");
+          button2=game.gui.add.button(150,0,"closeWindow");
+          button5=game.gui.add.button(300,0,"next state");
+          var buttons=game.gui.add.window(180,100,300,200,"window");
+          //var button3=game.gui.add.scrollbar(20,70);
+          var button3=game.gui.add.radiobox(20,50,"checkbox",buttons);
+          //var button5=game.gui.add.textinput(20,110,"text",buttons);
+          //button3.group='group1';
+          //buttons.show();
+          button2.events.onInputDown.add(function(){
+            buttons.close();
+          },this);
+          button4.events.onInputDown.add(function(){
+            buttons.show();
+          },this);
+          button5.events.onInputDown.add(function(){
+            game.state.start('second');
+          },this);
+
+        }
       }
-      function create () {
-        game.stage.backgroundColor = 0xcccccc;
-        button4=game.gui.add.button(0,0,"button");
-        button2=game.gui.add.button(100,0,"textbutton");
-        var buttons=game.gui.add.window(180,100,300,200,"window");
-        //var button3=game.gui.add.scrollbar(20,70);
-        var button3=game.gui.add.radiobox(20,50,"checkbox",buttons);
-        //var button5=game.gui.add.textinput(20,110,"text",buttons);
-        //button3.group='group1';
-        //buttons.show();
-        button2.events.onInputDown.add(function(){
-          buttons.hide();
-        },this);
-        button4.events.onInputDown.add(function(){
-          buttons.show();
-        },this);
+      second_state={
+        preload:function() {
+        },
+        create:function() {
+          var button5=game.gui.add.button(0,0,"previous state");
+          button5.events.onInputDown.add(function(){
+            game.state.start('first');
+          },this);
+        }
       }
+      game.state.add('first',first_state);
+      game.state.add('second',second_state);
+      game.state.start('first');
     //};
     </script>
 

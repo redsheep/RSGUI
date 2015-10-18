@@ -98,68 +98,59 @@ CanvasCtrlFactory = function(game){
 CanvasCtrlFactory.prototype = {
 	window:function(x,y,width,height,title,container){
 		var object = new Window(this.game,x,y,width,height,title);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	button:function(x,y,text,container){
 		var object = new CustomizeButton(this.game,x,y,12,0,text);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	checkbox:function(x,y,text,container){
 		var object = new CheckBox(this.game,x,y,5,1,text);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	label:function(x,y,text,container){
 		var object = new Phaser.Text(this.game,x,y,text);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	textinput:function(x,y,text,container){
 		var object = new TextInput(this.game,x,y,10,1,text);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	scrollbar:function(x,y,container){
 		var object = new ScrollBar(this.game,x,y,10,1);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	dropdown:function(x,y,container){
 		var object = new DropDown(this.game,x,y,10,1);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	radiobox:function(x,y,text,container){
 		var object = new RadioBox(this.game,x,y,10,1,text);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	toggle:function(x,y,container){
 		var object = new ToggleButton(this.game,x,y,10,1);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
 	tooltip:function(x,y,container){
 		var object = new ToolTip(this.game,x,y,10,1);
-		if(container==null)this.addToDefaultGroup(object);
-		else container.addChild(object);
+		this.addToGroup(container,object);
 		return object;
 	},
-  addToDefaultGroup:function(object){
-    if(this.gui==null)
-      this.gui=this.game.add.group();
-    this.gui.addChild(object);
+  addToGroup:function(container,object){
+    if(container==null)
+      this.game.world.add(object);
+    else
+      container.addChild(object);
   },
   getDefaultTheme:function(){
 

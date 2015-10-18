@@ -83,10 +83,12 @@ Window.prototype.removeChild=function(object){
 Window.prototype.show=function(){
 	this.game.add.tween(this.scale).to( { x: 1.0, y:1.0 }, 2000, Phaser.Easing.Linear.None, true, 0);
 	//this.game.add.tween(this).to( { alpha: 1.0 }, 2000, Phaser.Easing.Linear.None, true, 1000);
+	this.onShow.dispatch();
 }
 
-Window.prototype.hide=function(){
+Window.prototype.close=function(){
 	//konwn issue, scale to zero will cause input handler error
 	this.game.add.tween(this.scale).to( { x: 0.0001, y:0.0001 }, 2000, Phaser.Easing.Linear.None, true, 0);
 	//this.game.add.tween(this).to( { alpha: 0.0 }, 2000, Phaser.Easing.Linear.None, true, 1000);
+	this.onClose.dispatch();
 }
