@@ -12,7 +12,7 @@ CustomizeButton = function (game, x, y,radius, border,text,theme) {
 	this._upFrame='rsgui-button-up';
 	this._downFrame='rsgui-button-down';
 	this._frame=this._upFrame;
-	this._hasTexture=true;
+	//this._hasTexture=true;
 	//this.width=width;
 	//this.height=height;
 };
@@ -26,13 +26,13 @@ CustomizeButton.prototype.drawCanvas=function(){
 	this._bmd.cls();
 	this._bmd.ctx.lineWidth=b;
 	this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
-	if(this._state=='up'){
+	if(this._state=='down'){
+		this._bmd.ctx.fillStyle = "#333"
+	}else{
 		var my_gradient = this._bmd.ctx.createLinearGradient(0,0,0,50);
 		my_gradient.addColorStop(0,"#ccc");
 		my_gradient.addColorStop(1,"#333");
 		this._bmd.ctx.fillStyle = my_gradient;
-	}else{
-		this._bmd.ctx.fillStyle = "#333"
 	}
 	//x, y, width, height, radius, fill, stroke
 	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);

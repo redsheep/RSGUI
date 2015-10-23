@@ -3,7 +3,7 @@ Window = function (game, x, y, width, height, text) {
 
 	this._text = text;//new Phaser.Text(game, 0, 0, text, { font: "bold 16px Arial", fill: "#000"});
 
-	GUIObject.call(this, game, x, y+32, width, height);
+	GUIContainer.call(this, game, x, y+32, width, height);
 
 	//this._titleBarbmd = new Phaser.BitmapData(game, '', width, 32);
 	//this._titleBar = game.add.sprite(x,y,this._titleBarbmd);
@@ -14,14 +14,14 @@ Window = function (game, x, y, width, height, text) {
 	this._border=1;
 	this._window_bg="rsgui-window-bg";
 	this._window_title="rsgui-window-title";
-	this.anchor.setTo(0.5,0.5);
+	this.setAnchor(0.4,0.3);
 	//this._title_offset = theme.window.title.offset;
 	//this._panel_offset = theme.window.bg.offset;
 	this._hasTexture=true;
 	//this._titleBar.width=width;
 	//this._titleBar.height=32;
 	this.inputEnabled = true;
-	this.input.enableDrag();
+	//this.input.enableDrag();
 	//this.events.onInputOver.add(this.onInputOverHandler, this);
 	//this.events.onInputOut.add(this.onInputOutHandler, this);
 	this.events.onInputDown.add(this.onInputDownHandler, this);
@@ -30,12 +30,12 @@ Window = function (game, x, y, width, height, text) {
 	this.onShow =new Phaser.Signal();
 	this.onClose=new Phaser.Signal();
 };
-Window.prototype = Object.create(GUIObject.prototype);
+Window.prototype = Object.create(GUIContainer.prototype);
 Window.prototype.constructor = Window;
-Window.prototype.update = function() {
+/*Window.prototype.update = function() {
 	GUIObject.prototype.update.call(this);
 	Phaser.Group.prototype.update.call(this);
-};
+};*/
 Window.prototype.drawCanvas=function(){
 	//GUIContainer.prototype.draw.call(this);
 	this._bmd.cls();
@@ -70,15 +70,12 @@ Window.prototype.drawTexture=function(){
 	//this._bmd.draw(this._text, r, r, null, null, 'normal');
 }
 Window.prototype.addChild=function(object){
-	Phaser.Group.prototype.addChild.call(this,object);
-	object.x-=this._originWidth*this.anchor.x;
-	object.y-=this._originHeight*this.anchor.y;
+	GUIContainer.prototype.addChild.call(this,object);
 	object.y+=this._title_height;
-	object.input.priorityID=this.children.length+1;
 }
 Window.prototype.removeChild=function(object){
-		Phaser.Group.prototype.removeChild.call(this,object);
-		object.y-=this._title_height;
+	GUIContainer.prototype.removeChild.call(this,object);
+	object.y-=this._title_height;
 }
 Window.prototype.show=function(){
 	this.game.add.tween(this.scale).to( { x: 1.0, y:1.0 }, 2000, Phaser.Easing.Linear.None, true, 0);

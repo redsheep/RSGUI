@@ -5,8 +5,8 @@
       <title>hello phaser!</title>
       <script src="phaser.min.js"></script>
   		<script src="GUIFactory.js"></script>
-  		<script src="GUIContainer.js"></script>
   		<script src="GUIObject.js"></script>
+  		<script src="GUIContainer.js"></script>
       <script src="canvas/canvasCtrl.js"></script>
   		<script src="canvas/button.js"></script>
   		<script src="canvas/scrollbar.js"></script>
@@ -14,6 +14,10 @@
   		<script src="canvas/checkbox.js"></script>
   		<script src="canvas/radiobox.js"></script>
   		<script src="canvas/textInput.js"></script>
+  		<script src="canvas/dropdown.js"></script>
+  		<script src="canvas/toggle.js"></script>
+  		<script src="canvas/tooltip.js"></script>
+  		<script src="canvas/listview.js"></script>
     </head>
     <body>
 
@@ -28,22 +32,28 @@
         },
         create:function() {
           game.stage.backgroundColor = 0xcccccc;
-          button4=game.gui.add.button(0,0,"showWindow");
+          button1=game.gui.add.button(0,0,"showWindow");
           button2=game.gui.add.button(150,0,"closeWindow");
-          button5=game.gui.add.button(300,0,"next state");
-          var buttons=game.gui.add.window(180,100,300,200,"window");
-          //var button3=game.gui.add.scrollbar(20,70);
-          var button3=game.gui.add.radiobox(20,50,"checkbox",buttons);
-          //var button5=game.gui.add.textinput(20,110,"text",buttons);
+          button3=game.gui.add.button(300,0,"next state");
+          var buttons=game.gui.add.window(180,100,400,240,"window");
+          var button4=game.gui.add.radiobox(200,130,"checkbox",buttons);
+          var button5=game.gui.add.textinput(20,130,"text",buttons);
+          var button6=game.gui.add.toggle(20,0,"toggle",buttons);
+          var button7=game.gui.add.dropdown(20,80,"text",buttons);
+          var button8=game.gui.add.tooltip(30,20,'this is a tip',buttons);
+          var button9=game.gui.add.scrollbar(350,0,buttons);
+          var button10=game.gui.add.listview(240,10,100,100,buttons);
+          var button11=game.gui.add.button(-20,0,"this is a wide button",button10);
+          var button12=game.gui.add.button(-20,40,"this is a wide button",button10);
           //button3.group='group1';
           //buttons.show();
           button2.events.onInputDown.add(function(){
             buttons.close();
           },this);
-          button4.events.onInputDown.add(function(){
+          button1.events.onInputDown.add(function(){
             buttons.show();
           },this);
-          button5.events.onInputDown.add(function(){
+          button3.events.onInputDown.add(function(){
             game.state.start('second');
           },this);
 

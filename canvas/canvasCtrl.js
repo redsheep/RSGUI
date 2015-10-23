@@ -126,8 +126,8 @@ CanvasCtrlFactory.prototype = {
 		this.addToGroup(container,object);
 		return object;
 	},
-	dropdown:function(x,y,container){
-		var object = new DropDown(this.game,x,y,10,1);
+	dropdown:function(x,y,text,container){
+		var object = new DropDown(this.game,x,y,10,1,text);
 		this.addToGroup(container,object);
 		return object;
 	},
@@ -136,13 +136,18 @@ CanvasCtrlFactory.prototype = {
 		this.addToGroup(container,object);
 		return object;
 	},
-	toggle:function(x,y,container){
+	toggle:function(x,y,text,container){
 		var object = new ToggleButton(this.game,x,y,10,1);
 		this.addToGroup(container,object);
 		return object;
 	},
-	tooltip:function(x,y,container){
-		var object = new ToolTip(this.game,x,y,10,1);
+	tooltip:function(x,y,text,container){
+		var object = new ToolTip(this.game,x,y,10,1,text);
+		this.addToGroup(container,object);
+		return object;
+	},
+  listview:function(x,y,width,height,container){
+		var object = new ListView(this.game,x,y,width,height);
 		this.addToGroup(container,object);
 		return object;
 	},

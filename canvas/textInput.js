@@ -21,8 +21,9 @@ TextInput = function (game, x, y,radius, border,text) {
 	this._hiddenInput.type = 'text';
 	this._hiddenInput.style.position = 'absolute';
 	this._hiddenInput.style.opacity = 0;
-	this._hiddenInput.style.left=(x+radius+border)+'px';
-	this._hiddenInput.style.top=(y+radius+border-30)+'px';
+	this._hiddenInput.style.left='0px';//(this.world.x+radius+border)+'px';
+	this._hiddenInput.style.top='0px';//(this.world.y+radius+border-30)+'px';
+	this._hiddenInput.style.width='1px';
 	this._hiddenInput.value=text;
 	this._delay=0;
 	document.body.appendChild(this._hiddenInput);

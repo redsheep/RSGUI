@@ -15,8 +15,8 @@ ScrollBar = function (game, x, y,radius, border) {
 ScrollBar.prototype = Object.create(GUIObject.prototype);
 ScrollBar.prototype.constructor = ScrollBar;
 ScrollBar.prototype.update = function() {
-  var sx=this.scale.x;
-  var sy=this.scale.y;
+	var sx=this.scale.x;
+	var sy=this.scale.y;
 	var b=this._border;
 	var r=this._radius;
 	var w=this.width;
@@ -25,7 +25,7 @@ ScrollBar.prototype.update = function() {
 	var bh=this._buttonheight*sy;
 	if(this._state=='buttondown'){
 		var py=this.game.input.worldY-this.parent.y;//-this.y;
-        this._position=Math.min( Math.max(py, this.y+w/sx/2*sy+b),this.y+h-w/sx/2*sy-b-bh)-this.y-w/sx/2*sy-b;
+		this._position=Math.min( Math.max(py, this.y+w/sx/2*sy+b),this.y+h-w/sx/2*sy-b-bh)-this.y-w/sx/2*sy-b;
 	}
 	GUIObject.prototype.update.call(this);
 };
@@ -35,7 +35,7 @@ ScrollBar.prototype.drawCanvas=function(){
 	var w=this.width/this.scale.x;
 	var h=this.height/this.scale.y;
 	var p=this._position/this.scale.y;
-    var bh=this._buttonheight;
+	var bh=this._buttonheight;
 	this._bmd.cls();
 	//draw scroll bar
 	this._bmd.ctx.beginPath();
@@ -85,8 +85,8 @@ ScrollBar.prototype.drawTexture=function(){
 	//this._bmd.draw(this._text, r, r, null, null, 'normal');
 }
 ScrollBar.prototype.onInputDownHandler = function (sprite, pointer) {
-    var sx=this.scale.x;
-    var sy=this.scale.y;
+	var sx=this.scale.x;
+	var sy=this.scale.y;
 	var b=this._border;
 	var r=this._radius;
 	var w=this.width;
@@ -94,18 +94,18 @@ ScrollBar.prototype.onInputDownHandler = function (sprite, pointer) {
 	var p=this._position;
 	var bh=this._buttonheight*sy;
 	var offsety=this.parent.y;
-    this._state='down';
+	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 	if(pointer.worldY<offsety+this.y+w/sx/2*sy){
-        this._position=Math.max(p-1,0);
-}else if(pointer.worldY<offsety+this.y+h-w/sx/2*sy){
-    if(pointer.worldY<offsety+this.y+p+b+w/sx/2*sy){
-        this._position=Math.max(p-1,0);
-    }else if(pointer.worldY>offsety+this.y+p+bh+b+w/sx/2*sy){
-        this._position=Math.max(p+1,0);
-    }else{
-        this._state='buttondown';
-    }
-}else{
-    this._position=Math.max(p+1,0);
-}
+		this._position=Math.max(p-1,0);
+	}else if(pointer.worldY<offsety+this.y+h-w/sx/2*sy){
+		if(pointer.worldY<offsety+this.y+p+b+w/sx/2*sy){
+			this._position=Math.max(p-1,0);
+		}else if(pointer.worldY>offsety+this.y+p+bh+b+w/sx/2*sy){
+			this._position=Math.max(p+1,0);
+		}else{
+			this._state='buttondown';
+		}
+	}else{
+		this._position=Math.max(p+1,0);
+	}
 };

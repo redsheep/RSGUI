@@ -1,40 +1,95 @@
 //  Here is a custom game object
 GUIContainer = function (game, x, y, width, height) {
-
-	Phaser.Group.call(this, game);
-
-	this.x=x;this.y=y;
-	this._width=width;
-	this._height=height;
-	this._focus=true;
-	this._bmd=new Phaser.BitmapData(game, '', width, height);
-	//this._inputHandler=game.add.sprite(x,y,this._bmd);
-	//this.game.world.addChild(this._inputHandler);
-
-	//this._inputHandler.inputEnabled = true;
-	//Redirect the input events to here so we can handle animation updates, etc
-	//this.events.onInputOver.add(this.onInputOverHandler, this);
-	//this.events.onInputOut.add(this.onInputOutHandler, this);
-	//this._inputHandler.events.onInputDown.add(this.onInputDownHandler, this);
-	//this._inputHandler.events.onInputUp.add(this.onInputUpHandler, this);
+	GUIObject.call(this, game,x,y,width,height);
+	this._border=1;
+	this._radius=10;
+	this._padding=this._border+this._radius;
+	this._childmask = new Phaser.Graphics(game, 0, 0);
+	this._childmask.beginFill(0xffffff);
+	var p=this._padding;
+	this._childmask.drawRect(0,0,width,height);
+	this.addChild(this._childmask);
+	this._focusChild=null;
+	this._downChild=null;
 };
-GUIContainer.prototype = Object.create(Phaser.Group.prototype);
+GUIContainer.prototype = Object.create(GUIObject.prototype);
 GUIContainer.prototype.constructor = GUIContainer;
 GUIContainer.prototype.update = function() {
-	//this.draw();
+	GUIObject.prototype.update.call(this);
 	Phaser.Group.prototype.update.call(this);
-	//this._inputHandler.x=this.x;
-	//this._inputHandler.y=this.y;
-	//for(var c in this.children){
-	//	this.children[c].update();
-	//}
+	if(this.hitTest(this.game.input.mousePointer,this)){
+		hitChild=this.getHitChild(this.game.input.mousePointer);
+		if(this._focusChild!=hitChild){
+			if(this._focusChild!=null)
+				this._focusChild.onInputOutHandler(this._focusChild,this.game.input.mousePointer);
+			if(hitChild!=null)
+				hitChild.onInputOverHandler(hitChild,this.game.input.mousePointer);
+		}
+		this._focusChild=hitChild;
+	}
 };
-GUIContainer.prototype.draw=function(){
-	//var b=this._border;
-	//var r=this._radius;
-	//this._bmd.cls();
-	//this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
-	//this._bmd.ctx.fillStyle= "#ddd";
-	//this._bmd.ctx.roundRect(0, 0, this._width, this._height, 12, true,'down');
-	//this._bmd.draw(this._text, 2, 2, null, null, 'normal');
+GUIContainer.prototype.getHitChild=function(pointer){
+	if(this.hitTest(pointer,this)==false) return null;
+	for(i=this.children.length-1;i>=0;i--){
+		child = this.children[i];
+		if(child.input!=null && child.input.enabled){
+			if(this.hitTest(pointer,child)){
+				return child;
+			}
+		}
+	}
+	return null;
+}
+GUIContainer.prototype.hitTest=function(point,sprite){
+	m_left=sprite.world.x-sprite.anchor.x*sprite.width;
+	m_right=sprite.world.x+(1-sprite.anchor.x)*sprite.width;
+	m_top=sprite.world.y-sprite.anchor.y*sprite.height;
+	m_bottom=sprite.world.y+(1-sprite.anchor.y)*sprite.height;
+	if(point.x>m_left && point.x<m_right && point.y>m_top && point.y<m_bottom)
+		return true;
+	return false;
+}
+GUIContainer.prototype.fireAllChildEvent=function(event,pointer){
+	for(i=this.children.length-1;i>=0;i--){
+		child = this.children[i];
+		if(child.input!=null && child.input.enabled){
+			if(child[event]!=null){
+				child[event](child, pointer);
+			}
+		}
+	}
+}
+GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
+	this._downChild=this.getHitChild(pointer);
+	if(this._downChild!=null){
+		this._downChild.onInputDownHandler(this._downChild,pointer);
+		this.input.disableDrag();
+	}else {
+		this.input.enableDrag();
+	}
+}
+GUIContainer.prototype.onInputUpHandler=function(sprite,pointer){
+	if(this._downChild!=null)
+		this._downChild.onInputUpHandler(this._downChild,pointer);
+	this._downChild=null;
+}
+GUIContainer.prototype.addChild=function(object){
+	Phaser.Group.prototype.addChild.call(this,object);
+	//object.y+=this._title_height;
+  if(object!=this._childmask)
+    object.mask=this._childmask;
+  if(object.input!=null)
+    object.input.enabled=true;
+	object.x-=this._originWidth*this.anchor.x;
+	object.y-=this._originHeight*this.anchor.y;
+}
+GUIContainer.prototype.removeChild=function(object){
+	Phaser.Group.prototype.removeChild.call(this,object);
+	object.y-=this._title_height;
+  object.mask=this._mask;
+}
+GUIObject.prototype.setAnchor=function(x,y){
+	this.anchor.x=x;this.anchor.y=y;
+	this._childmask.x=-this._originWidth*this.anchor.x;
+	this._childmask.y=-this._originHeight*this.anchor.y;
 }

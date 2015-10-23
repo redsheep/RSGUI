@@ -45,7 +45,6 @@ GUIObject.prototype.drawCanvas=function(){ }
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
-
 	//  If the Pointer was only just released then we don't fire an over event
 	if (pointer.justReleased())
 	{
@@ -60,7 +59,6 @@ GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
 		this.onInputOver.dispatch(this, pointer);
 	}
 	this._state='over';
-
 };
 
 /**
@@ -72,7 +70,6 @@ GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 GUIObject.prototype.onInputOutHandler = function (sprite, pointer) {
-
 	this._state='up';
 	if (this.onInputOut)
 	{
@@ -125,13 +122,12 @@ GUIObject.prototype.resize=function(width,height){
 	this._originHeight=height;
 	this.onResize.dispatch();
 }
-
 GUIObject.prototype.focus=function(){
 	this._focus=true;
 	if(this.parent!=null){
 		for(i=0;i<this.parent.children.length;i++){
 			var child=this.parent.children[i];
-			if(child!=this){
+			if(child!=this && child.blur!=null){
 				child.blur();
 			}
 		}
