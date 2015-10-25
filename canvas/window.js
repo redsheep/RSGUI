@@ -1,25 +1,16 @@
 //  Here is a custom game object
 Window = function (game, x, y, width, height, text) {
 
-	this._text = text;//new Phaser.Text(game, 0, 0, text, { font: "bold 16px Arial", fill: "#000"});
-
 	GUIContainer.call(this, game, x, y+32, width, height);
 
-	//this._titleBarbmd = new Phaser.BitmapData(game, '', width, 32);
-	//this._titleBar = game.add.sprite(x,y,this._titleBarbmd);
-	//this._panel = game.add.sprite(x,y+32,this._bmd);
-
+	this._text = text;
 	this._title_height=32;
 	this._radius=24;
 	this._border=1;
 	this._window_bg="rsgui-window-bg";
 	this._window_title="rsgui-window-title";
 	this.setAnchor(0.4,0.3);
-	//this._title_offset = theme.window.title.offset;
-	//this._panel_offset = theme.window.bg.offset;
-	this._hasTexture=true;
-	//this._titleBar.width=width;
-	//this._titleBar.height=32;
+
 	this.inputEnabled = true;
 	//this.input.enableDrag();
 	//this.events.onInputOver.add(this.onInputOverHandler, this);
@@ -32,24 +23,30 @@ Window = function (game, x, y, width, height, text) {
 };
 Window.prototype = Object.create(GUIContainer.prototype);
 Window.prototype.constructor = Window;
-/*Window.prototype.update = function() {
-	GUIObject.prototype.update.call(this);
-	Phaser.Group.prototype.update.call(this);
-};*/
 Window.prototype.drawCanvas=function(){
 	//GUIContainer.prototype.draw.call(this);
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var th=this._title_height;
+	var b=this._border;
+	var r=this._radius;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
 	this._bmd.cls();
 	if(this._focus){
 		this._bmd.ctx.fillStyle= "#666";
 	}else{
 		this._bmd.ctx.fillStyle= "#999";
 	}
-	this._bmd.ctx.roundRect(0, 0, this.width, 32, 12, true, 'up');
+	this._bmd.ctx.roundRect(b, b, w-2*b, 32, 12, true,'up');
 	//this._bmd.draw(this._text, 12, 6, null, null, 'normal');
 	//this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
-	this._bmd.ctx.fillStyle= "#ddd";
-	this._bmd.ctx.roundRect(0, this._title_height, this.width,
-		 this.height-this._title_height, 12, true,'down');
+	this._bmd.ctx.fillStyle= this._color;
+	this._bmd.ctx.roundRect(b, th, w-2*b, h-th-2*b, 12, true,'down');
+	this._bmd.ctx.fillStyle=fontcolor;
+	this._bmd.ctx.font=font;
+	this._bmd.ctx.textBaseline='top';
+	this._bmd.ctx.fillText(this._text, r+b, b);
 }
 Window.prototype.drawTexture=function(){
 	this._bmd.cls();
@@ -88,4 +85,11 @@ Window.prototype.close=function(){
 	this.game.add.tween(this.scale).to( { x: 0.0001, y:0.0001 }, 2000, Phaser.Easing.Linear.None, true, 0);
 	//this.game.add.tween(this).to( { alpha: 0.0 }, 2000, Phaser.Easing.Linear.None, true, 1000);
 	this.onClose.dispatch();
+}
+Window.prototype.setTheme=function(theme){
+	this._radius=theme.radius;
+	this._color=theme.bgcolor;
+	this._border=this.getProperty(theme.border).size;
+	this._font=this.getProperty(theme.font);
+	if(theme.texture!=null)this._hasTexture=true;
 }

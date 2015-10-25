@@ -1,7 +1,7 @@
 function getTextSize(font,fontSize,text,bold,warp){
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext('2d');
-    ctx.font = fontSize+"px Arial";
+    ctx.font = fontSize+"px "+font;
     var width=ctx.measureText(text).width;
     var size = {width:width, height:fontSize};
     if(warp!=null)
@@ -99,16 +99,25 @@ CanvasCtrlFactory.prototype = {
 	window:function(x,y,width,height,title,container){
 		var object = new Window(this.game,x,y,width,height,title);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.window);
+		return object;
+	},
+  listview:function(x,y,width,height,container){
+		var object = new ListView(this.game,x,y,width,height);
+		this.addToGroup(container,object);
+    //object.setTheme(this.theme.listview);
 		return object;
 	},
 	button:function(x,y,text,container){
-		var object = new CustomizeButton(this.game,x,y,12,0,text);
+		var object = new Button(this.game,x,y,text);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.button);
 		return object;
 	},
 	checkbox:function(x,y,text,container){
-		var object = new CheckBox(this.game,x,y,5,1,text);
+		var object = new CheckBox(this.game,x,y,text);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.checkbox);
 		return object;
 	},
 	label:function(x,y,text,container){
@@ -117,38 +126,39 @@ CanvasCtrlFactory.prototype = {
 		return object;
 	},
 	textinput:function(x,y,text,container){
-		var object = new TextInput(this.game,x,y,10,1,text);
+		var object = new TextInput(this.game,x,y,text);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.textinput);
 		return object;
 	},
 	scrollbar:function(x,y,container){
-		var object = new ScrollBar(this.game,x,y,10,1);
+		var object = new ScrollBar(this.game,x,y);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.scrollbar);
 		return object;
 	},
 	dropdown:function(x,y,text,container){
-		var object = new DropDown(this.game,x,y,10,1,text);
+		var object = new DropDown(this.game,x,y,text);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.dropdown);
 		return object;
 	},
 	radiobox:function(x,y,text,container){
-		var object = new RadioBox(this.game,x,y,10,1,text);
+		var object = new RadioBox(this.game,x,y,text);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.radiobox);
 		return object;
 	},
 	toggle:function(x,y,text,container){
-		var object = new ToggleButton(this.game,x,y,10,1);
+		var object = new ToggleButton(this.game,x,y);
 		this.addToGroup(container,object);
+    object.setTheme(this.theme.toggle);
 		return object;
 	},
 	tooltip:function(x,y,text,container){
-		var object = new ToolTip(this.game,x,y,10,1,text);
+		var object = new ToolTip(this.game,x,y,text);
 		this.addToGroup(container,object);
-		return object;
-	},
-  listview:function(x,y,width,height,container){
-		var object = new ListView(this.game,x,y,width,height);
-		this.addToGroup(container,object);
+    object.setTheme(this.theme.tooltip);
 		return object;
 	},
   addToGroup:function(container,object){
@@ -157,11 +167,74 @@ CanvasCtrlFactory.prototype = {
     else
       container.addChild(object);
   },
-  getDefaultTheme:function(){
-
-  },
   setTheme:function(theme){
-    this.theme=theme
+    this.theme=theme;
+  },
+  getDefaultTheme:function(){
+    return {
+      'window':{
+        'radius':10,
+        'bgcolor':'#ddd',
+        'headerheight':32,
+        'headercolor':'#333',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'button':{
+        'radius':10,
+        'up':'#fff',
+        'down':'#999',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'dropdown':{
+        'radius':6,
+        'bgcolor':'#fff',
+        'select':'skyblue',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'checkbox':{
+        'radius':5,
+        'bgcolor':'#000',
+        'check':'#fff',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'radiobox':{
+        'radius':5,
+        'bgcolor':'#000',
+        'check':'#fff',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'scrollbar':{
+        'radius':5,
+        'bgcolor':'#000',
+        'button':'#fff',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'textinput':{
+        'radius':8,
+        'bgcolor':'#fff',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'toggle':{
+        'radius':10,
+        'bgcolor':'#ccc',
+        'button':'#999',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      },
+      'tooltip':{
+        'radius':8,
+        'bgcolor':'#ccc',
+        'border':'1px #ccc',
+        'font':'Arial 16px #000'
+      }
+    }
   }
 }
 CanvasCtrlFactory.prototype.constructor = CanvasCtrlFactory;

@@ -1,15 +1,14 @@
 //  Here is a custom game object
-CheckBox = function (game, x, y, radius, border, text) {
-	this._box=24;
+CheckBox = function (game, x, y, text) {
 	this._seprate=2;
 	this._text=text;
-	var txtsize=getTextSize('Arial',16,text);
-	var height=2*radius+txtsize.height;
-	var width=height+this._seprate+txtsize.width;
+	//var txtsize=getTextSize('Arial',16,text);
+	//var height=2*radius+txtsize.height;
+	//var width=height+this._seprate+txtsize.width;
 	GUIObject.call(this, game, x, y, width, height, text);
 
-	this._border=border;
-	this._radius=radius;
+	//this._border=border;
+	//this._radius=radius;
 	this._check=false;
 	this._onFrame = "rsgui-check-on";
 	this._offFrame = "rsgui-check-off";
@@ -53,7 +52,6 @@ CheckBox.prototype.drawTexture=function(){
 	this._bmd.ctx.fillText(this._text, c, r);
 }
 CheckBox.prototype.onInputDownHandler = function (sprite, pointer) {
-
 	if(this._check){
 		this._check=false;
 		this._frame=this._offFrame;
@@ -67,3 +65,11 @@ CheckBox.prototype.onInputDownHandler = function (sprite, pointer) {
 		this.onInputDown.dispatch(this, pointer);
 	}
 };
+CheckBox.prototype.resize=function(width,height){
+	this._originHeight=height+this._extendHeight;
+	this._originWidth=height+width+this._extendWidth;
+	if(this._minWidth!=null && this._originWidth<this._minWidth)
+		this._originWidth=this._minWidth;
+	this._bmd.resize(this._originWidth,this._originHeight);
+	this.onResize.dispatch();
+}

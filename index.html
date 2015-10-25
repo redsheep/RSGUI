@@ -25,16 +25,16 @@
     //window.onload = function() {
       var game = new Phaser.Game(480, 320, Phaser.CANVAS, '');
       game.gui=new CanvasCtrl(game);
-      game.gui.loadTheme('theme.json');
+      //game.gui.loadTheme('theme.json');
       first_state={
         preload:function() {
-          game.gui.loadAsset();
+          //game.gui.loadAsset();
         },
         create:function() {
           game.stage.backgroundColor = 0xcccccc;
           button1=game.gui.add.button(0,0,"showWindow");
           button2=game.gui.add.button(150,0,"closeWindow");
-          button3=game.gui.add.button(300,0,"next state");
+          button3=game.gui.add.button(300,0,"click to next state");
           var buttons=game.gui.add.window(180,100,400,240,"window");
           var button4=game.gui.add.radiobox(200,130,"checkbox",buttons);
           var button5=game.gui.add.textinput(20,130,"text",buttons);
@@ -56,7 +56,6 @@
           button3.events.onInputDown.add(function(){
             game.state.start('second');
           },this);
-
         }
       }
       second_state={

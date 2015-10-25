@@ -1,52 +1,56 @@
 //  Here is a custom game object
-CustomizeButton = function (game, x, y,radius, border,text,theme) {
+Button = function (game, x, y, text) {
 
-	var txtsize=getTextSize('Arial',16,text);
-	var height=2*border+2*radius+txtsize.height;
-	var width=2*border+2*radius+txtsize.width;
-	GUIObject.call(this, game, x, y, width, height);
+	//var txtsize=getTextSize('Arial',16,text);
+	//var height=2*border+2*radius+txtsize.height;
+	//var width=2*border+2*radius+txtsize.width;
+	GUIObject.call(this, game, x, y);
 	this._text=text;
-	this._border=border;
-	this._radius=radius;
-	this._theme=theme;
+	//this._border=border;
+	//this._radius=radius;
+	//this._theme=theme;
 	this._upFrame='rsgui-button-up';
 	this._downFrame='rsgui-button-down';
 	this._frame=this._upFrame;
+	this._upColor='#ccc';
+	this._downColor='#333';
 	//this._hasTexture=true;
 	//this.width=width;
 	//this.height=height;
 };
-CustomizeButton.prototype = Object.create(GUIObject.prototype);
-CustomizeButton.prototype.constructor = CustomizeButton;
-CustomizeButton.prototype.drawCanvas=function(){
+Button.prototype = Object.create(GUIObject.prototype);
+Button.prototype.constructor = Button;
+Button.prototype.drawCanvas=function(){
 	var b=this._border;
 	var r=this._radius;
 	var w=this._originWidth;
 	var h=this._originHeight;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
 	this._bmd.cls();
 	this._bmd.ctx.lineWidth=b;
-	this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
+	this._bmd.ctx.strokeStyle = this._borderColor;
 	if(this._state=='down'){
-		this._bmd.ctx.fillStyle = "#333"
+		this._bmd.ctx.fillStyle = this._downColor;
 	}else{
 		var my_gradient = this._bmd.ctx.createLinearGradient(0,0,0,50);
-		my_gradient.addColorStop(0,"#ccc");
-		my_gradient.addColorStop(1,"#333");
+		my_gradient.addColorStop(0,this._upColor);
+		my_gradient.addColorStop(1,this._downColor);
 		this._bmd.ctx.fillStyle = my_gradient;
 	}
 	//x, y, width, height, radius, fill, stroke
 	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
-	this._bmd.ctx.fillStyle='#000';
-	this._bmd.ctx.font='16px Arial';
+	this._bmd.ctx.fillStyle=fontcolor;
+	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.fillText(this._text, b+r, b+r);
 };
-CustomizeButton.prototype.setNinePatchTexture=function(up,down){
+Button.prototype.setNinePatchTexture=function(up,down){
 	this._upFrame=up;
 	this._downFrame=down;
 	this._hasTexture=true;
 };
-CustomizeButton.prototype.drawTexture=function(){
+Button.prototype.drawTexture=function(){
 	this._bmd.cls();
 	var w=this._originWidth;
 	var h=this._originHeight;
@@ -59,11 +63,16 @@ CustomizeButton.prototype.drawTexture=function(){
 	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.fillText(this._text, r, r);
 };
-CustomizeButton.prototype.onInputDownHandler = function (sprite, pointer) {
+Button.prototype.onInputDownHandler = function (sprite, pointer) {
 	this._frame=this._downFrame;
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
-CustomizeButton.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
+Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 	this._frame=this._upFrame;
 	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer);
 };
+Button.prototype.setTheme=function(theme){
+	GUIObject.prototype.setTheme.call(this,theme);
+	this._upColor=theme.up;
+	this._downColor=theme.down;
+}

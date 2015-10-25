@@ -17,7 +17,7 @@ GUIContainer.prototype.constructor = GUIContainer;
 GUIContainer.prototype.update = function() {
 	GUIObject.prototype.update.call(this);
 	Phaser.Group.prototype.update.call(this);
-	if(this.hitTest(this.game.input.mousePointer,this)){
+	/*if(this.hitTest(this.game.input.mousePointer,this)){
 		hitChild=this.getHitChild(this.game.input.mousePointer);
 		if(this._focusChild!=hitChild){
 			if(this._focusChild!=null)
@@ -26,7 +26,7 @@ GUIContainer.prototype.update = function() {
 				hitChild.onInputOverHandler(hitChild,this.game.input.mousePointer);
 		}
 		this._focusChild=hitChild;
-	}
+	}*/
 };
 GUIContainer.prototype.getHitChild=function(pointer){
 	if(this.hitTest(pointer,this)==false) return null;
@@ -88,7 +88,7 @@ GUIContainer.prototype.removeChild=function(object){
 	object.y-=this._title_height;
   object.mask=this._mask;
 }
-GUIObject.prototype.setAnchor=function(x,y){
+GUIContainer.prototype.setAnchor=function(x,y){
 	this.anchor.x=x;this.anchor.y=y;
 	this._childmask.x=-this._originWidth*this.anchor.x;
 	this._childmask.y=-this._originHeight*this.anchor.y;

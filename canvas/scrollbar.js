@@ -1,16 +1,19 @@
 //  Here is a custom game object
-ScrollBar = function (game, x, y,radius, border) {
-	var height=2*border+2*radius+120;
-	var width=2*border+2*radius+0;
-	this._bmd = new Phaser.BitmapData(game, '', width, height);
-	GUIObject.call(this, game, x, y, width, height);
+ScrollBar = function (game, x, y) {
+	//var height=2*border+2*radius+120;
+	//var width=2*border+2*radius+0;
+	GUIObject.call(this, game, x, y);
 
-	this._border=border;
-	this._radius=radius;
+	//this._border=border;
+	//this._radius=radius;
 	this._position=0;
 	this._range={minvalue:0,maxvalue:100};
-	this._buttonheight=width-2*border+10;
-
+	this._buttonheight=20;
+	this._text=" ";
+	this._originHeight=180;
+	this._originWidth=20;
+	this._radius=6;
+	this._border=1;
 };
 ScrollBar.prototype = Object.create(GUIObject.prototype);
 ScrollBar.prototype.constructor = ScrollBar;
@@ -19,8 +22,8 @@ ScrollBar.prototype.update = function() {
 	var sy=this.scale.y;
 	var b=this._border;
 	var r=this._radius;
-	var w=this.width;
-	var h=this.height;
+	var w=this._originWidth;
+	var h=this._originHeight;
 	var p=this._position;
 	var bh=this._buttonheight*sy;
 	if(this._state=='buttondown'){
@@ -32,23 +35,23 @@ ScrollBar.prototype.update = function() {
 ScrollBar.prototype.drawCanvas=function(){
 	var b=this._border;
 	var r=this._radius;
-	var w=this.width/this.scale.x;
-	var h=this.height/this.scale.y;
-	var p=this._position/this.scale.y;
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var p=this._position;
 	var bh=this._buttonheight;
 	this._bmd.cls();
 	//draw scroll bar
 	this._bmd.ctx.beginPath();
-	var grd = this._bmd.ctx.createLinearGradient(0, 0, w, 0);
-	grd.addColorStop(0, '#333');
-	grd.addColorStop(0.5, '#666');
-	grd.addColorStop(1.0, '#333');
-	this._bmd.ctx.fillStyle = grd;
+	//var grd = this._bmd.ctx.createLinearGradient(0, 0, w, 0);
+	//grd.addColorStop(0, '#333');
+	//grd.addColorStop(0.5, '#666');
+	//grd.addColorStop(1.0, '#333');
+	this._bmd.ctx.fillStyle = this._color;
 	this._bmd.ctx.roundRect(0, 0, w, h, r, true);
 	//this._bmd.ctx.fill();
 	//draw scroll bar button
 	this._bmd.ctx.beginPath();
-	this._bmd.ctx.fillStyle = "#fff"
+	this._bmd.ctx.fillStyle = this._buttonColor;
 	this._bmd.ctx.roundRect(b+r/4, p+b+w/2, w-2*b-r/2, bh, r/2, true);
 	//this._bmd.ctx.fill();
 	//draw scroll bar up button
@@ -70,11 +73,9 @@ ScrollBar.prototype.drawCanvas=function(){
 }
 ScrollBar.prototype.drawTexture=function(){
 	this._bmd.cls();
-	var x=0;
-	var y=0;
-	var w=this.width;
-	var h=this.height;
-	var r=5;//this._radius;
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var r=this._radius;
 	var W=this.game.cache.getImage(this._bgFrame).width;
 	var H=this.game.cache.getImage(this._bgFrame).height;
 	this._bmd.generateThreePatchTexture(this._bgFrame,x,y+8,w,16,r,W,H);
@@ -89,8 +90,8 @@ ScrollBar.prototype.onInputDownHandler = function (sprite, pointer) {
 	var sy=this.scale.y;
 	var b=this._border;
 	var r=this._radius;
-	var w=this.width;
-	var h=this.height;
+	var w=this._originWidth;
+	var h=this._originHeight;
 	var p=this._position;
 	var bh=this._buttonheight*sy;
 	var offsety=this.parent.y;
@@ -109,3 +110,13 @@ ScrollBar.prototype.onInputDownHandler = function (sprite, pointer) {
 		this._position=Math.max(p+1,0);
 	}
 };
+ScrollBar.prototype.setTheme=function(theme){
+	GUIObject.prototype.setTheme.call(this,theme);
+	this._buttonColor=theme.button;
+}
+ScrollBar.prototype.resize=function(width,height){
+	this._originHeight=180;
+	this._originWidth=20;
+	this._bmd.resize(this._originWidth,this._originHeight);
+	this.onResize.dispatch();
+}

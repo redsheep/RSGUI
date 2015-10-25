@@ -1,19 +1,18 @@
 //  Here is a custom game object
-TextInput = function (game, x, y,radius, border,text) {
+TextInput = function (game, x, y,text) {
 
-	this._minWidth=100;
-	this._text=text;
-	var txtsize=getTextSize('Arial',20,text);
-	var height=2*radius+2*border+ txtsize.height;
-	var width=2*radius+2*border+ this._minWidth;
+	//var txtsize=getTextSize('Arial',20,text);
+	//var height=2*radius+2*border+txtsize.height;
+	//var width=2*radius+2*border+txtsize.width;
 	//this._bmd = new Phaser.BitmapData(game, '', width, height);
-	GUIObject.call(this, game, x, y, width, height, text);
+	GUIObject.call(this, game, x, y);
 
 	this._text=text;
-	this._border=border;
-	this._radius=radius;
+	this._minWidth=80;
+	//this._border=border;
+	//this._radius=radius;
 	this._focus=false;
-	this._cursor=radius+border;
+	//this._cursor=radius+border;
 	this._bgFrame="rsgui-scroll-bg";
 	// create the hidden input element
 	var self=this;
@@ -43,17 +42,18 @@ TextInput = function (game, x, y,radius, border,text) {
 		//var distance=newwidth-oldwidth;
 		//var pos=self._cursor+distance;
 		self._text=this.value;
-		var textwidth=getTextSize('Arial',20, self._text ).width;
+		var textwidth=getTextSize(self._font.family,self._font.size, self._text ).width;
 		//var pos=getCaretPos(this._hiddenInput);
 		var pos=this.selectionStart;
 		var offset=Math.max(0,textwidth-w+2*r+2*b);
-		self._cursor=getTextSize('Arial',20, self._text.substring(0,pos)).width-offset+r+b;
+		self._cursor=getTextSize(self._font.family,self._font.size,
+		 				self._text.substring(0,pos)).width-offset+r+b;
 		//console.log(pos);
 		//var textwidth=getTextSize('Arial',20, self._text ).width;
 		//if(textwidth<w) self._cursor=textwidth+r+b;
 		//else self._cursor=w-2*r-2*b;
 	});
-	this._hasTexture=true;
+	//this._hasTexture=true;
 
 };
 TextInput.prototype = Object.create(GUIObject.prototype);
@@ -64,14 +64,16 @@ TextInput.prototype.drawCanvas=function(){
 	var r=this._radius;
 	var w=this._originWidth;
 	var h=this._originHeight;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
 	this._bmd.cls();
 	this._bmd.ctx.save();
 	this._bmd.ctx.fillRect(r+b,r+b,w-2*r-2*b,h-2*r-2*b);
 	this._bmd.ctx.globalCompositeOperation="source-in";
-	this._bmd.ctx.font="20px Arial";
-	this._bmd.ctx.fillStyle="#000";
+	this._bmd.ctx.font=font;
+	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.textBaseline="top";
-	var textwidth=getTextSize('Arial',20, this._text ).width;
+	var textwidth=getTextSize(this._font.family,this._font.size,this._text).width;
 	var offset=Math.max(0,textwidth-w+2*r+2*b);
 	this._bmd.ctx.fillText(this._text, r+b-offset,r+b);
 	this._bmd.ctx.globalCompositeOperation="destination-over";
@@ -79,9 +81,9 @@ TextInput.prototype.drawCanvas=function(){
 		this._bmd.ctx.fillRect(this._cursor,r+b,1, h-2*r-2*b);
 	}
 
-	this._bmd.ctx.lineWidth=b.toString();
-	this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
-	this._bmd.ctx.fillStyle="#fff";
+	this._bmd.ctx.lineWidth=b;
+	this._bmd.ctx.strokeStyle = this._borderColor;
+	this._bmd.ctx.fillStyle=this._color;
 	//x, y, width, height, radius, fill, stroke
 	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
 	this._bmd.ctx.restore();
@@ -125,10 +127,11 @@ TextInput.prototype.onInputDownHandler = function (sprite, pointer) {
 	var w=this._originWidth;
 	var h=this._originHeight;
 	var px=pointer.worldX-this.parent.x-this.x-r-b;
-	var textwidth=getTextSize('Arial',20, this._text ).width;
+	var textwidth=getTextSize(this._font.family,this._font.size,this._text).width;
 	var offset=Math.max(0,textwidth-w+2*r+2*b);
 	var pos=this.getCursorPos(px+offset);
-	this._cursor=getTextSize('Arial',20, this._text.substring(0,pos)).width-offset+r+b;
+	this._cursor=getTextSize(this._font.family,this._font.size,
+								this._text.substring(0,pos)).width-offset+r+b;
 	// console.log(pos,offset);
 	window.setTimeout(function (){
 		self._hiddenInput.focus();

@@ -1,18 +1,25 @@
 //  Here is a custom game object
 GUIObject = function (game, x, y, width, height) {
-
+	//width=256||width;
+	//height=256||height;
 	this._bmd=new Phaser.BitmapData(game, '', width, height);
 	Phaser.Sprite.call(this, game, x ,y, this._bmd);
 	//this.game.world.addChild(this._inputHandler);
 	this._hasTexture=false;
-	//this.x=x;this.y=y;
-	//this._radius=radius;
-	//this.width=width;
-	//this.height=height;
+
 	this._state='up';
+	this._border=0;
+	this._radius=1;
 	this._originWidth=width;
 	this._originHeight=height;
+	this._extendWidth=0;
+	this._extendHeight=0;
+	this._minWidth=null;
+	this._minHeight=null;
+	this._borderColor='#ccc';
 	this._focus=false;
+	//this._theme=null;
+	this._font={'family':'Arial','size':16,'color':'#000'};
 	this.inputEnabled = true;
 	//Redirect the input events to here so we can handle animation updates, etc
 	//this.events.onInputOver.add(this.onInputOverHandler, this);
@@ -116,12 +123,6 @@ GUIObject.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 	}
 	this._state='up';
 };
-GUIObject.prototype.resize=function(width,height){
-	this._bmd.resize(width,height);
-	this._originWidth=width;
-	this._originHeight=height;
-	this.onResize.dispatch();
-}
 GUIObject.prototype.focus=function(){
 	this._focus=true;
 	if(this.parent!=null){
@@ -134,8 +135,46 @@ GUIObject.prototype.focus=function(){
 	}
 	this.onFocus.dispatch();
 }
-
 GUIObject.prototype.blur=function(){
 	this._focus=false;
 	this.onBlur.dispatch();
+}
+GUIObject.prototype.getProperty=function(property){
+	dict={};
+	data = property.split(' ');
+	for(i=0;i<data.length;i++){
+		if(data[i].indexOf('#')!=-1)
+			dict.color=data[i];
+		else if(data[i].indexOf('px')!=-1)
+			dict.size=parseInt(data[i].substring(0,data[i].length-2));
+		else
+			dict.family=data[i];
+	}
+	return dict;
+}
+GUIObject.prototype.setTheme=function(theme){
+	this._radius=theme.radius;
+	this._color=theme.bgcolor;
+	this._border=this.getProperty(theme.border).size;
+	this._font=this.getProperty(theme.font);
+	this.setFont(this._font);
+	if(theme.texture!=null)this._hasTexture=true;
+}
+GUIObject.prototype.setFont=function(font){
+	this._font=font;
+	txtsize=getTextSize(font.family,font.size,this._text);
+	width = 2*this._radius+2*this._border+txtsize.width;
+	height = 2*this._radius+2*this._border+txtsize.height;
+	this.resize(parseInt(width),parseInt(height));
+}
+GUIObject.prototype.resize=function(width,height){
+	this._originWidth=width+this._extendWidth;
+	if(this._minWidth!=null && this._originWidth<this._minWidth)
+		this._originWidth=this._minWidth;
+	this._originHeight=height+this._extendHeight;
+	this._bmd.resize(this._originWidth,this._originHeight);
+	this.onResize.dispatch();
+}
+GUIObject.prototype.getFont=function(){
+	return this._font.size+'px '+this._font.family;
 }
