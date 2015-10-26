@@ -14,6 +14,8 @@ ScrollBar = function (game, x, y) {
 	this._originWidth=20;
 	this._radius=6;
 	this._border=1;
+	this._bgFrame='rsgui-scrollbar-bg';
+	this._btnFrame='rsgui-scrollbar-btn';
 };
 ScrollBar.prototype = Object.create(GUIObject.prototype);
 ScrollBar.prototype.constructor = ScrollBar;
@@ -78,7 +80,7 @@ ScrollBar.prototype.drawTexture=function(){
 	var r=this._radius;
 	var W=this.game.cache.getImage(this._bgFrame).width;
 	var H=this.game.cache.getImage(this._bgFrame).height;
-	this._bmd.generateThreePatchTexture(this._bgFrame,x,y+8,w,16,r,W,H);
+	this._bmd.horizontalThreePatchTexture(this._bgFrame,0,0,2*r,h,r,W,H);
 	var TW=this.game.cache.getImage(this._btnFrame).width;
 	var TH=this.game.cache.getImage(this._btnFrame).height;
 	var TX=this._position;

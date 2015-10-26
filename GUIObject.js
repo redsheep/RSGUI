@@ -158,7 +158,8 @@ GUIObject.prototype.setTheme=function(theme){
 	this._border=this.getProperty(theme.border).size;
 	this._font=this.getProperty(theme.font);
 	this.setFont(this._font);
-	if(theme.texture!=null)this._hasTexture=true;
+	if(theme.texture!=null)
+		this._hasTexture=true;
 }
 GUIObject.prototype.setFont=function(font){
 	this._font=font;

@@ -10,6 +10,8 @@ ToggleButton = function (game, x, y) {
 	this._minWidth=70;
 	//this._border=border;
 	//this._radius=radius;
+	this._bgFrame='rsgui-toggle-bg';
+	this._btnFrame='rsgui-toggle-btn';
 	this._check=false;
 };
 ToggleButton.prototype = Object.create(GUIObject.prototype);
@@ -36,6 +38,34 @@ ToggleButton.prototype.drawCanvas=function(){
 		this._bmd.ctx.roundRect(w-b-36, b, 36, h-2*b, r, true);
 	}else{
 		this._bmd.ctx.roundRect(b, b, 36, h-2*b, r, true);
+	}
+}
+ToggleButton.prototype.drawTexture=function(){
+	var b=0;//this._border;
+	var r=this._radius;
+  var w=this._originWidth;
+  var h=this._originHeight;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
+	var W=this.game.cache.getImage(this._bgFrame).width;
+	var H=this.game.cache.getImage(this._bgFrame).height;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
+	this._bmd.cls();
+	this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
+	this._bmd.ctx.font=font;
+  this._bmd.ctx.fillStyle=fontcolor;
+  this._bmd.ctx.textBaseline="top"
+  this._bmd.ctx.fillText("on", r+b, r+b);
+  this._bmd.ctx.fillText("off", w-r-b-16, r+b);
+  this._bmd.ctx.fillStyle=this._bottonColor;
+
+	var W=this.game.cache.getImage(this._btnFrame).width;
+	var H=this.game.cache.getImage(this._btnFrame).height;
+	if(this._check){
+		this._bmd.generateNinePatchTexture(this._btnFrame,w-b-36, b, 36, h-2*b,r,W,H);
+	}else{
+		this._bmd.generateNinePatchTexture(this._btnFrame,b, b, 36, h-2*b,r,W,H);
 	}
 }
 ToggleButton.prototype.onInputDownHandler = function (sprite, pointer) {

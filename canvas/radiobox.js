@@ -10,8 +10,8 @@ RadioBox = function (game, x, y, text) {
 	//this._border=border;
 	//this._radius=radius;
 	this._check=false;
-	this._onFrame = "rsgui-check-on";
-	this._offFrame = "rsgui-check-off";
+	this._onFrame = "rsgui-checkbox-on";
+	this._offFrame = "rsgui-checkbox-off";
 	this._frame=this._offFrame;
 	//this._hasTexture=true;
 };
@@ -44,13 +44,15 @@ RadioBox.prototype.drawTexture=function(){
 	var w=this._originWidth;
 	var h=this._originHeight;
 	var c=h+this._seprate;
-	this._bmd.cls();
+	var fontcolor=this._font.color;
+	var font=this.getFont();
 	var W=this.game.cache.getImage(this._frame).width;
 	var H=this.game.cache.getImage(this._frame).height;
+	this._bmd.cls();
 	this._bmd.copy(this._frame,0,0,W,H,0,0,h,h);
-	this._bmd.ctx.font="16px Arial";
-	this._bmd.ctx.fillStyle="#fff";
-	this._bmd.ctx.textBaseline="top"
+	this._bmd.ctx.fillStyle=fontcolor;
+	this._bmd.ctx.font=font;
+	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.fillText(this._text, c, r);
 }
 RadioBox.prototype.onInputDownHandler = function (sprite, pointer) {

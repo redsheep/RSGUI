@@ -62,7 +62,7 @@ Window.prototype.drawTexture=function(){
 	var TX=this._width/2-TW/2;
 	//this._titleBarbmd.copy(this._window_title,0,0,TW,TH,TX,0,TW,32);
 	//this._bmd.ctx.globalCompositeOperation
-	this._bmd.generateThreePatchTexture(this._window_title,0,0,
+	this._bmd.horizontalThreePatchTexture(this._window_title,0,0,
 		w,th,TH,TW,TH);
 	//this._bmd.draw(this._text, r, r, null, null, 'normal');
 }

@@ -13,7 +13,7 @@ TextInput = function (game, x, y,text) {
 	//this._radius=radius;
 	this._focus=false;
 	//this._cursor=radius+border;
-	this._bgFrame="rsgui-scroll-bg";
+	this._bgFrame="rsgui-textinput-bg";
 	// create the hidden input element
 	var self=this;
 	this._hiddenInput = document.createElement('input');
@@ -95,12 +95,15 @@ TextInput.prototype.drawTexture=function(){
 	var r=this._radius;
 	var W=this.game.cache.getImage(this._bgFrame).width;
 	var H=this.game.cache.getImage(this._bgFrame).height;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
+	this._bmd.cls();
 	this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
 	if(this._focus && this._delay++%66<33){
 		this._bmd.ctx.fillRect(this._cursor,r,1, h-2*r);
 	}
-	this._bmd.ctx.font="20px Arial";
-	this._bmd.ctx.fillStyle="#000";
+	this._bmd.ctx.font=font;
+	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.textBaseline="top";
 	this._bmd.ctx.fillText(this._text,r,r);
 }

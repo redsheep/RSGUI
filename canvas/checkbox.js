@@ -10,8 +10,8 @@ CheckBox = function (game, x, y, text) {
 	//this._border=border;
 	//this._radius=radius;
 	this._check=false;
-	this._onFrame = "rsgui-check-on";
-	this._offFrame = "rsgui-check-off";
+	this._onFrame = "rsgui-checkbox-on";
+	this._offFrame = "rsgui-checkbox-off";
 	this._frame=this._offFrame;
 	this._hasTexture=true;
 };

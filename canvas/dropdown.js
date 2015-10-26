@@ -15,6 +15,7 @@ DropDown = function (game, x, y, text) {
   this._selected=this._options[0];
   this._over=0;
   this._outbounds=true;
+  this._bgFrame='rsgui-dropdown-bg';
 };
 DropDown.prototype = Object.create(GUIObject.prototype);
 DropDown.prototype.constructor = DropDown;
@@ -35,7 +36,7 @@ DropDown.prototype.drawCanvas=function(){
   var h=this._originHeight;
 	var fontcolor=this._font.color;
 	var font=this.getFont();
-  var textheight=16;
+  var textheight=this._font.size;
   this._bmd.cls();
   this._bmd.ctx.strokeStyle = this._borderColor;
   this._bmd.ctx.fillStyle= this._color;
@@ -55,6 +56,44 @@ DropDown.prototype.drawCanvas=function(){
   if(this._dropdown){
     this._bmd.ctx.fillStyle=this._color;
     this._bmd.ctx.roundRect(b,2*r+2*b+ textheight,w-2*b, textheight*this._options.length+ 2*r+2*b, r, true);
+    this._bmd.ctx.fillStyle=this._selectColor;
+    this._bmd.ctx.fillRect(b,r+b+ this._over*textheight+2*r+2*b+textheight,w-2*b,textheight);
+    this._bmd.ctx.fillStyle=fontcolor;
+    for(i=0;i<this._options.length;i++)
+    this._bmd.ctx.fillText(this._options[i], r+b, (r+b)+i*textheight+2*r+2*b+textheight);
+  }
+  this._bmd.ctx.fillText(this._selected, r+b, r+b);
+}
+DropDown.prototype.drawTexture=function(){
+  var b=0;//this._border;
+  var r=this._radius;
+  var w=this._originWidth;
+  var h=this._originHeight;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
+  var textheight=this._font.size;
+  var W=this.game.cache.getImage(this._bgFrame).width;
+	var H=this.game.cache.getImage(this._bgFrame).height;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
+  this._bmd.cls();
+	this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
+  //draw drop down arrow
+  this._bmd.ctx.beginPath();
+  this._bmd.ctx.moveTo(w-r-b-16,r+b+4);
+  this._bmd.ctx.lineTo(w-r-b, r+b+4);
+  this._bmd.ctx.lineTo(w-r-b-8, r+b+textheight-4);
+  this._bmd.ctx.closePath();
+  this._bmd.ctx.fillStyle="#999";
+  this._bmd.ctx.fill();
+  //draw options text
+  this._bmd.ctx.font=font;
+  this._bmd.ctx.fillStyle=fontcolor;
+  this._bmd.ctx.textBaseline="top"
+  if(this._dropdown){
+    this._bmd.ctx.fillStyle=this._color;
+    this._bmd.generateNinePatchTexture(this._bgFrame,b,2*r+2*b+ textheight,w-2*b,
+       textheight*this._options.length+ 2*r+2*b,r,W,H);
     this._bmd.ctx.fillStyle=this._selectColor;
     this._bmd.ctx.fillRect(b,r+b+ this._over*textheight+2*r+2*b+textheight,w-2*b,textheight);
     this._bmd.ctx.fillStyle=fontcolor;

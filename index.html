@@ -24,11 +24,11 @@
     <script type="text/javascript">
     //window.onload = function() {
       var game = new Phaser.Game(480, 320, Phaser.CANVAS, '');
-      game.gui=new CanvasCtrl(game);
-      //game.gui.loadTheme('theme.json');
+      game.gui=new RSCanvasGUI(game);
+      game.gui.loadTheme('theme.json');
       first_state={
         preload:function() {
-          //game.gui.loadAsset();
+          game.gui.loadAsset();
         },
         create:function() {
           game.stage.backgroundColor = 0xcccccc;

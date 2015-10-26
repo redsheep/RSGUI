@@ -30,6 +30,7 @@ Button.prototype.drawCanvas=function(){
 	this._bmd.cls();
 	this._bmd.ctx.lineWidth=b;
 	this._bmd.ctx.strokeStyle = this._borderColor;
+	//draw button background
 	if(this._state=='down'){
 		this._bmd.ctx.fillStyle = this._downColor;
 	}else{
@@ -38,17 +39,12 @@ Button.prototype.drawCanvas=function(){
 		my_gradient.addColorStop(1,this._downColor);
 		this._bmd.ctx.fillStyle = my_gradient;
 	}
-	//x, y, width, height, radius, fill, stroke
+	//draw button text
 	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
 	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.fillText(this._text, b+r, b+r);
-};
-Button.prototype.setNinePatchTexture=function(up,down){
-	this._upFrame=up;
-	this._downFrame=down;
-	this._hasTexture=true;
 };
 Button.prototype.drawTexture=function(){
 	this._bmd.cls();
@@ -57,9 +53,11 @@ Button.prototype.drawTexture=function(){
 	var r=this._radius;
 	var W=this.game.cache.getImage(this._frame).width;
 	var H=this.game.cache.getImage(this._frame).height;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
 	this._bmd.generateNinePatchTexture(this._frame,0,0,w,h,r,W,H);
-	this._bmd.ctx.fillStyle='#000';
-	this._bmd.ctx.font='16px Arial';
+	this._bmd.ctx.fillStyle=fontcolor;
+	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.fillText(this._text, r, r);
 };

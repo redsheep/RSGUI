@@ -80,7 +80,7 @@ function(tex,x,y,w,h,r,W,H){
 	this.copy(tex,W-r,r,r,mH,w-r+x,y+r,r,mh);
 	this.copy(tex,r,r,mW,mH,x+r,y+r,mw,mh);
 }
-Phaser.BitmapData.prototype.generateThreePatchTexture=
+Phaser.BitmapData.prototype.horizontalThreePatchTexture=
 function(tex,x,y,w,h,r,W,H){
 	var mw=w-2*r;
 	var mh=h-2*r;
@@ -90,11 +90,23 @@ function(tex,x,y,w,h,r,W,H){
 	this.copy(tex,r,0,mW,H,x+r,y,mw,h);
 	this.copy(tex,W-r,0,r,H,x+w-r,y,r,h);
 }
+Phaser.BitmapData.prototype.verticalThreePatchTexture=
+function(tex,x,y,w,h,r,W,H){
+	var mw=w-2*r;
+	var mh=h-2*r;
+	var mW=W-2*r;
+	var mH=H-2*r;
+	this.copy(tex,0,0,W,r,x,y,w,r);
+	this.copy(tex,0,r,mW,H,x,y+r,w,mh);
+	this.copy(tex,0,H-r,W,r,x,y+h-r,w,r);
+}
 CanvasCtrlFactory = function(game){
 	this.gui=null;//new Phaser.Group(game);
 	this.game=game;
   this.theme=this.getDefaultTheme();
 }
+
+CanvasCtrlFactory.prototype.constructor = CanvasCtrlFactory;
 CanvasCtrlFactory.prototype = {
 	window:function(x,y,width,height,title,container){
 		var object = new Window(this.game,x,y,width,height,title);
@@ -169,72 +181,86 @@ CanvasCtrlFactory.prototype = {
   },
   setTheme:function(theme){
     this.theme=theme;
+    //this.loadAsset();
   },
-  getDefaultTheme:function(){
-    return {
-      'window':{
-        'radius':10,
-        'bgcolor':'#ddd',
-        'headerheight':32,
-        'headercolor':'#333',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'button':{
-        'radius':10,
-        'up':'#fff',
-        'down':'#999',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'dropdown':{
-        'radius':6,
-        'bgcolor':'#fff',
-        'select':'skyblue',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'checkbox':{
-        'radius':5,
-        'bgcolor':'#000',
-        'check':'#fff',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'radiobox':{
-        'radius':5,
-        'bgcolor':'#000',
-        'check':'#fff',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'scrollbar':{
-        'radius':5,
-        'bgcolor':'#000',
-        'button':'#fff',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'textinput':{
-        'radius':8,
-        'bgcolor':'#fff',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'toggle':{
-        'radius':10,
-        'bgcolor':'#ccc',
-        'button':'#999',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      },
-      'tooltip':{
-        'radius':8,
-        'bgcolor':'#ccc',
-        'border':'1px #ccc',
-        'font':'Arial 16px #000'
-      }
+  loadAsset:function(){
+  	//loader=new Phaser.Loader(this.game);
+  	for(component in this.theme){
+  		if('texture' in this.theme[component]){
+  			texture = this.theme[component]['texture'];
+  			for(key in texture){
+  				assetkey = 'rsgui-'+component+'-'+key;
+  				path = texture[key];
+  				this.game.load.image(assetkey, path);
+  			}
+  		}
+  	}
+  	//loader.start();
+  }
+}
+CanvasCtrlFactory.prototype.getDefaultTheme=function(){
+  return {
+    'window':{
+      'radius':10,
+      'bgcolor':'#ddd',
+      'headerheight':32,
+      'headercolor':'#333',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'button':{
+      'radius':10,
+      'up':'#fff',
+      'down':'#999',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'dropdown':{
+      'radius':6,
+      'bgcolor':'#fff',
+      'select':'skyblue',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'checkbox':{
+      'radius':5,
+      'bgcolor':'#000',
+      'check':'#fff',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'radiobox':{
+      'radius':5,
+      'bgcolor':'#000',
+      'check':'#fff',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'scrollbar':{
+      'radius':5,
+      'bgcolor':'#000',
+      'button':'#fff',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'textinput':{
+      'radius':8,
+      'bgcolor':'#fff',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'toggle':{
+      'radius':10,
+      'bgcolor':'#ccc',
+      'button':'#999',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
+    },
+    'tooltip':{
+      'radius':8,
+      'bgcolor':'#ccc',
+      'border':'1px #ccc',
+      'font':'Arial 16px #000'
     }
   }
 }
-CanvasCtrlFactory.prototype.constructor = CanvasCtrlFactory;

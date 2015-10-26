@@ -1,47 +1,94 @@
 {
   "window":{
-    "bg":{
-      "path":"images/window_bg.png",
-      "radius":64,
-      "offset":-20
-    },
-    "title":{
-      "path":"images/window_title.png",
-      "radius":44,
-      "offset":20
+    "radius":20,
+    "bgcolor":"#ddd",
+    "headerheight":32,
+    "headercolor":"#333",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "bg":"images/window_bg.png",
+      "title":"images/window_title.png"
     }
   },
   "button":{
-    "up":{
-      "path":"images/btn_up.png",
-      "radius":12
-    },
-    "down":{
-      "path":"images/btn_down.png",
-      "radius":12
+    "radius":10,
+    "up":"#fff",
+    "down":"#999",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "up":"images/btn_up.png",
+      "down":"images/btn_down.png"
     }
   },
-  "scrollbar":{
-    "bg":{
-      "path":"images/scroll_bg.png",
-      "radius":32
-    },
-    "button":{
-      "path":"images/scroll_btn.png",
-      "radius":32
-    }
-  },
-  "textinput":{
-    "bg":{
-      "path":"images/scroll_bg.png"
+  "dropdown":{
+    "radius":6,
+    "bgcolor":"#fff",
+    "select":"skyblue",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "bg":"images/scroll_bg.png"
     }
   },
   "checkbox":{
-    "on":{
-      "path":"images/check_on.png"
-    },
-    "off":{
-      "path":"images/check_off.png"
+    "radius":5,
+    "bgcolor":"#000",
+    "check":"#fff",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "on":"images/check_on.png",
+      "off":"images/check_off.png"
     }
+  },
+  "radiobox":{
+    "radius":5,
+    "bgcolor":"#000",
+    "check":"#fff",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "on":"images/check_on.png",
+      "off":"images/check_off.png"
+    }
+  },
+  "scrollbar":{
+    "radius":5,
+    "bgcolor":"#000",
+    "button":"#fff",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "bg":"images/scroll_bg.png",
+      "btn":"images/scroll_btn.png"
+    }
+  },
+  "textinput":{
+    "radius":8,
+    "bgcolor":"#fff",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "bg":"images/scroll_bg.png"
+    }
+  },
+  "toggle":{
+    "radius":10,
+    "bgcolor":"#ccc",
+    "button":"#999",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000",
+    "texture":{
+      "bg":"images/btn_down.png",
+      "btn":"images/btn_up.png"
+    }
+  },
+  "tooltip":{
+    "radius":8,
+    "bgcolor":"#ccc",
+    "border":"1px #ccc",
+    "font":"Arial 16px #000"
   }
 }
