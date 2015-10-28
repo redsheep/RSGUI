@@ -1,18 +1,11 @@
-//  Here is a custom game object
+
 TextInput = function (game, x, y,text) {
 
-	//var txtsize=getTextSize('Arial',20,text);
-	//var height=2*radius+2*border+txtsize.height;
-	//var width=2*radius+2*border+txtsize.width;
-	//this._bmd = new Phaser.BitmapData(game, '', width, height);
 	GUIObject.call(this, game, x, y);
 
 	this._text=text;
 	this._minWidth=80;
-	//this._border=border;
-	//this._radius=radius;
 	this._focus=false;
-	//this._cursor=radius+border;
 	this._bgFrame="rsgui-textinput-bg";
 	// create the hidden input element
 	var self=this;
@@ -23,6 +16,7 @@ TextInput = function (game, x, y,text) {
 	this._hiddenInput.style.left='0px';//(this.world.x+radius+border)+'px';
 	this._hiddenInput.style.top='0px';//(this.world.y+radius+border-30)+'px';
 	this._hiddenInput.style.width='1px';
+	this._hiddenInput.style.height='1px';
 	this._hiddenInput.value=text;
 	this._delay=0;
 	document.body.appendChild(this._hiddenInput);
@@ -32,29 +26,16 @@ TextInput = function (game, x, y,text) {
 	});
 	this._hiddenInput.addEventListener('keyup', function(e) {
 		e = e || window.event;
-		//self._text=this.value;
-		//var oldwidth=getTextSize('Arial',20, self._text).width
 		var b=self._border;
 		var r=self._radius;
-		//var h=self.height/self.scale.y;
-		var w=self.width/self.scale.x;
-		//var newwidth = getTextSize('Arial',20, this.value ).width;
-		//var distance=newwidth-oldwidth;
-		//var pos=self._cursor+distance;
+		var w=self._originWidth;
 		self._text=this.value;
 		var textwidth=getTextSize(self._font.family,self._font.size, self._text ).width;
-		//var pos=getCaretPos(this._hiddenInput);
 		var pos=this.selectionStart;
 		var offset=Math.max(0,textwidth-w+2*r+2*b);
 		self._cursor=getTextSize(self._font.family,self._font.size,
 		 				self._text.substring(0,pos)).width-offset+r+b;
-		//console.log(pos);
-		//var textwidth=getTextSize('Arial',20, self._text ).width;
-		//if(textwidth<w) self._cursor=textwidth+r+b;
-		//else self._cursor=w-2*r-2*b;
 	});
-	//this._hasTexture=true;
-
 };
 TextInput.prototype = Object.create(GUIObject.prototype);
 TextInput.prototype.constructor = TextInput;
@@ -67,7 +48,44 @@ TextInput.prototype.drawCanvas=function(){
 	var fontcolor=this._font.color;
 	var font=this.getFont();
 	this._bmd.cls();
+	this._bmd.ctx.lineWidth=b;
+	this._bmd.ctx.strokeStyle = this._borderColor;
+	//draw background
+	this._bmd.ctx.fillStyle=this._color;
+	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true,'');
+	this._bmd.ctx.fill();
+	this._bmd.ctx.strokeBorder(b);
+	//draw text mask
 	this._bmd.ctx.save();
+	this._bmd.ctx.beginPath();
+	this._bmd.ctx.rect(r+b,r+b,w-2*r-2*b,h-2*r-2*b);
+	this._bmd.ctx.clip();
+	this._bmd.ctx.closePath();
+	//draw text
+	this._bmd.ctx.font=font;
+	this._bmd.ctx.fillStyle=fontcolor;
+	this._bmd.ctx.textBaseline="top";
+	var textwidth=getTextSize(this._font.family,this._font.size,this._text).width;
+	var offset=Math.max(0,textwidth-w+2*r+2*b);
+	this._bmd.ctx.fillText(this._text, r+b-offset,r+b);
+	this._bmd.ctx.restore();
+	//draw cursor
+	this._bmd.ctx.fillStyle=fontcolor;
+	if(this._focus && this._delay++%66<33){
+		this._bmd.ctx.fillRect(this._cursor,r+b,1, h-2*r-2*b);
+	}
+}
+TextInput.prototype.drawTexture=function(){
+	this._bmd.cls();
+	var b=this._border;
+	var w=this._originWidth;
+	var h=this._originHeight;
+	var r=this._radius;
+	var W=this.game.cache.getImage(this._bgFrame).width;
+	var H=this.game.cache.getImage(this._bgFrame).height;
+	var fontcolor=this._font.color;
+	var font=this.getFont();
+	this._bmd.cls();
 	this._bmd.ctx.fillRect(r+b,r+b,w-2*r-2*b,h-2*r-2*b);
 	this._bmd.ctx.globalCompositeOperation="source-in";
 	this._bmd.ctx.font=font;
@@ -80,62 +98,40 @@ TextInput.prototype.drawCanvas=function(){
 	if(this._focus && this._delay++%66<33){
 		this._bmd.ctx.fillRect(this._cursor,r+b,1, h-2*r-2*b);
 	}
-
-	this._bmd.ctx.lineWidth=b;
-	this._bmd.ctx.strokeStyle = this._borderColor;
-	this._bmd.ctx.fillStyle=this._color;
-	//x, y, width, height, radius, fill, stroke
-	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
-	this._bmd.ctx.restore();
-}
-TextInput.prototype.drawTexture=function(){
-	this._bmd.cls();
-	var w=this._originWidth;
-	var h=this._originHeight;
-	var r=this._radius;
-	var W=this.game.cache.getImage(this._bgFrame).width;
-	var H=this.game.cache.getImage(this._bgFrame).height;
-	var fontcolor=this._font.color;
-	var font=this.getFont();
-	this._bmd.cls();
 	this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
 	if(this._focus && this._delay++%66<33){
 		this._bmd.ctx.fillRect(this._cursor,r,1, h-2*r);
 	}
-	this._bmd.ctx.font=font;
-	this._bmd.ctx.fillStyle=fontcolor;
-	this._bmd.ctx.textBaseline="top";
-	this._bmd.ctx.fillText(this._text,r,r);
 }
 TextInput.prototype.getCursorPos=function(pos){
+	var sx=this.scale.x;
 	var total=this._text.length;
 	var nearest=total;
-	var distance=getTextSize('Arial',20, this._text).width;
+	var distance=getTextSize(this._font.family,this._font.size, this._text).width*sx;
 	for(i=0;i<=total;i++){
 		substr=this._text.substring(0,i);
-		width=getTextSize('Arial',20, substr).width;
+		width=getTextSize(this._font.family,this._font.size, substr).width*sx;
 		if(Math.abs(width-pos)<distance){
 			nearest=i;
 			distance=Math.abs(width-pos);
 		}
 	}
-	//console.log(this._text.substring(0,nearest),pos,nearest);
-	return nearest;//getTextSize('Arial',20, this._text.substring(0,nearest)).width;
+	return nearest;
 }
 TextInput.prototype.onInputDownHandler = function (sprite, pointer) {
 	var self=this;
 	this._state='down';
-	var b=this._border;
-	var r=this._radius;
+	var sx=this.scale.x;
+	var b=this._border*sx;
+	var r=this._radius*sx;
 	var w=this._originWidth;
 	var h=this._originHeight;
-	var px=pointer.worldX-this.parent.x-this.x-r-b;
+	var px=pointer.worldX-this.world.x-r-b;
 	var textwidth=getTextSize(this._font.family,this._font.size,this._text).width;
-	var offset=Math.max(0,textwidth-w+2*r+2*b);
+	var offset=Math.max(0,textwidth*sx-w*sx+2*r+2*b);
 	var pos=this.getCursorPos(px+offset);
 	this._cursor=getTextSize(this._font.family,this._font.size,
 								this._text.substring(0,pos)).width-offset+r+b;
-	// console.log(pos,offset);
 	window.setTimeout(function (){
 		self._hiddenInput.focus();
 	}, 0);

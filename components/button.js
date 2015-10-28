@@ -1,22 +1,12 @@
-//  Here is a custom game object
 Button = function (game, x, y, text) {
 
-	//var txtsize=getTextSize('Arial',16,text);
-	//var height=2*border+2*radius+txtsize.height;
-	//var width=2*border+2*radius+txtsize.width;
 	GUIObject.call(this, game, x, y);
 	this._text=text;
-	//this._border=border;
-	//this._radius=radius;
-	//this._theme=theme;
 	this._upFrame='rsgui-button-up';
 	this._downFrame='rsgui-button-down';
 	this._frame=this._upFrame;
 	this._upColor='#ccc';
 	this._downColor='#333';
-	//this._hasTexture=true;
-	//this.width=width;
-	//this.height=height;
 };
 Button.prototype = Object.create(GUIObject.prototype);
 Button.prototype.constructor = Button;
@@ -41,6 +31,8 @@ Button.prototype.drawCanvas=function(){
 	}
 	//draw button text
 	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
+	this._bmd.ctx.fill();
+	this._bmd.ctx.strokeBorder(b);
 	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='top';

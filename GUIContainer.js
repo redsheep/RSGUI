@@ -3,12 +3,15 @@ GUIContainer = function (game, x, y, width, height) {
 	GUIObject.call(this, game,x,y,width,height);
 	this._border=1;
 	this._radius=10;
+	this._originWith=width;
+	this._originWith=height;
 	this._padding=this._border+this._radius;
 	this._childmask = new Phaser.Graphics(game, 0, 0);
 	this._childmask.beginFill(0xffffff);
-	var p=this._padding;
 	this._childmask.drawRect(0,0,width,height);
-	this.addChild(this._childmask);
+	this._childmask.isMask = true;
+	Phaser.Group.prototype.addChild.call(this,this._childmask);
+	var p=this._padding;
 	this._focusChild=null;
 	this._downChild=null;
 };
@@ -17,6 +20,7 @@ GUIContainer.prototype.constructor = GUIContainer;
 GUIContainer.prototype.update = function() {
 	GUIObject.prototype.update.call(this);
 	Phaser.Group.prototype.update.call(this);
+	//if(this.children.length==0)
 	/*if(this.hitTest(this.game.input.mousePointer,this)){
 		hitChild=this.getHitChild(this.game.input.mousePointer);
 		if(this._focusChild!=hitChild){
@@ -63,9 +67,9 @@ GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
 	this._downChild=this.getHitChild(pointer);
 	if(this._downChild!=null){
 		this._downChild.onInputDownHandler(this._downChild,pointer);
-		this.input.disableDrag();
+		if(this.input.draggable) this.input.isDragged=true;//disableDrag();
 	}else {
-		this.input.enableDrag();
+		if(this.input.draggable) this.input.isDragged=false;
 	}
 }
 GUIContainer.prototype.onInputUpHandler=function(sprite,pointer){
@@ -75,21 +79,23 @@ GUIContainer.prototype.onInputUpHandler=function(sprite,pointer){
 }
 GUIContainer.prototype.addChild=function(object){
 	Phaser.Group.prototype.addChild.call(this,object);
-	//object.y+=this._title_height;
-  if(object!=this._childmask)
-    object.mask=this._childmask;
-  if(object.input!=null)
-    object.input.enabled=true;
-	object.x-=this._originWidth*this.anchor.x;
-	object.y-=this._originHeight*this.anchor.y;
+	object.mask=this._childmask;
 }
 GUIContainer.prototype.removeChild=function(object){
-	Phaser.Group.prototype.removeChild.call(this,object);
-	object.y-=this._title_height;
-  object.mask=this._mask;
+	if(object!=this._mask)
+		Phaser.Group.prototype.removeChild.call(this,object);
 }
 GUIContainer.prototype.setAnchor=function(x,y){
+	for(i=this.children.length-1;i>=0;i--){
+		child = this.children[i];
+		child.x+=this._originWidth*(this.anchor.x-x);
+		child.y+=this._originHeight*(this.anchor.y-y);
+	}
 	this.anchor.x=x;this.anchor.y=y;
-	this._childmask.x=-this._originWidth*this.anchor.x;
-	this._childmask.y=-this._originHeight*this.anchor.y;
+}
+GUIContainer.prototype.removeAll=function(){
+	for(i=this.children.length-1;i>=0;i--){
+		child = this.children[i];
+		this.removeChild(child);
+	}
 }

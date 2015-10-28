@@ -81,14 +81,15 @@
     "border":"1px #ccc",
     "font":"Arial 16px #000",
     "texture":{
-      "bg":"images/btn_down.png",
+      "on":"images/btn_over.png",
+      "off":"images/btn_down.png",
       "btn":"images/btn_up.png"
     }
   },
   "tooltip":{
     "radius":8,
     "bgcolor":"#ccc",
-    "border":"1px #ccc",
+    "border":"1px #fff",
     "font":"Arial 16px #000"
   }
 }

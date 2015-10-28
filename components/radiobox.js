@@ -1,19 +1,13 @@
-//  Here is a custom game object
+
 RadioBox = function (game, x, y, text) {
-	//var txtsize=getTextSize('Arial',16,text);
-	//var height=2*radius+txtsize.height;
-	//var width=height+this._seprate+txtsize.width;
-	GUIObject.call(this, game, x, y, width, height, text);
+	GUIObject.call(this, game, x, y);
 
 	this._seprate=2;
 	this._text=text;
-	//this._border=border;
-	//this._radius=radius;
 	this._check=false;
 	this._onFrame = "rsgui-checkbox-on";
 	this._offFrame = "rsgui-checkbox-off";
 	this._frame=this._offFrame;
-	//this._hasTexture=true;
 };
 RadioBox.prototype = Object.create(GUIObject.prototype);
 RadioBox.prototype.constructor = CheckBox;
@@ -28,15 +22,19 @@ RadioBox.prototype.drawCanvas=function(){
 	this._bmd.cls();
 	this._bmd.ctx.strokeStyle = this._borderColor;
 	this._bmd.ctx.fillStyle= this._color;
-	this._bmd.ctx.roundRect(b, b, h-2*b, h-2*b, r, true);
+	this._bmd.ctx.arc(h/2,h/2,h/3,0,2*Math.PI);
+	this._bmd.ctx.fill();
 	if(this._check){
 		this._bmd.ctx.fillStyle= this._checkColor;
-		this._bmd.ctx.roundRect(r, r, h-2*r, h-2*r, 1, true);
+		this._bmd.ctx.beginPath();
+		this._bmd.ctx.arc(h/2,h/2,h/5,0,2*Math.PI);
+		this._bmd.ctx.closePath();
+		this._bmd.ctx.fill();
 	}
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.fillStyle=fontcolor;
-	this._bmd.ctx.textBaseline="top"
-	this._bmd.ctx.fillText(this._text, c, r);
+	this._bmd.ctx.textBaseline="middle"
+	this._bmd.ctx.fillText(this._text, c, h/2);
 }
 RadioBox.prototype.drawTexture=function(){
 	var b=this._border;

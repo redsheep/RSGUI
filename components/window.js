@@ -1,4 +1,4 @@
-//  Here is a custom game object
+
 Window = function (game, x, y, width, height, text) {
 
 	GUIContainer.call(this, game, x, y+32, width, height);
@@ -9,14 +9,7 @@ Window = function (game, x, y, width, height, text) {
 	this._border=1;
 	this._window_bg="rsgui-window-bg";
 	this._window_title="rsgui-window-title";
-	this.setAnchor(0.4,0.3);
-
-	this.inputEnabled = true;
-	//this.input.enableDrag();
-	//this.events.onInputOver.add(this.onInputOverHandler, this);
-	//this.events.onInputOut.add(this.onInputOutHandler, this);
-	this.events.onInputDown.add(this.onInputDownHandler, this);
-	this.events.onInputUp.add(this.onInputUpHandler, this);
+	this.setAnchor(0.5,0.5);
 
 	this.onShow =new Phaser.Signal();
 	this.onClose=new Phaser.Signal();
@@ -33,20 +26,26 @@ Window.prototype.drawCanvas=function(){
 	var fontcolor=this._font.color;
 	var font=this.getFont();
 	this._bmd.cls();
+	this._bmd.ctx.lineWidth=b;
+	this._bmd.ctx.strokeStyle = this._borderColor;
 	if(this._focus){
 		this._bmd.ctx.fillStyle= "#666";
 	}else{
 		this._bmd.ctx.fillStyle= "#999";
 	}
-	this._bmd.ctx.roundRect(b, b, w-2*b, 32, 12, true,'up');
+	this._bmd.ctx.roundRect(b, b, w-2*b, th, 12, 'up');
+	this._bmd.ctx.fill();
+	this._bmd.ctx.strokeBorder(b);
 	//this._bmd.draw(this._text, 12, 6, null, null, 'normal');
 	//this._bmd.ctx.strokeStyle = "rgb(127, 127, 127)";
 	this._bmd.ctx.fillStyle= this._color;
-	this._bmd.ctx.roundRect(b, th, w-2*b, h-th-2*b, 12, true,'down');
+	this._bmd.ctx.roundRect(b, th, w-2*b, h-th-2*b, 12, 'down');
+	this._bmd.ctx.fill();
+	this._bmd.ctx.strokeBorder(b);
 	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.font=font;
-	this._bmd.ctx.textBaseline='top';
-	this._bmd.ctx.fillText(this._text, r+b, b);
+	this._bmd.ctx.textBaseline='middle';
+	this._bmd.ctx.fillText(this._text, r+b, th/2);
 }
 Window.prototype.drawTexture=function(){
 	this._bmd.cls();
@@ -69,10 +68,14 @@ Window.prototype.drawTexture=function(){
 Window.prototype.addChild=function(object){
 	GUIContainer.prototype.addChild.call(this,object);
 	object.y+=this._title_height;
+	object.x-=this._originWidth*this.anchor.x;
+	object.y-=this._originHeight*this.anchor.y;
 }
 Window.prototype.removeChild=function(object){
-	GUIContainer.prototype.removeChild.call(this,object);
 	object.y-=this._title_height;
+	object.x+=this._originWidth*this.anchor.x;
+	object.y+=this._originHeight*this.anchor.y;
+	GUIContainer.prototype.removeChild.call(this,object);
 }
 Window.prototype.show=function(){
 	this.game.add.tween(this.scale).to( { x: 1.0, y:1.0 }, 2000, Phaser.Easing.Linear.None, true, 0);
@@ -86,10 +89,5 @@ Window.prototype.close=function(){
 	//this.game.add.tween(this).to( { alpha: 0.0 }, 2000, Phaser.Easing.Linear.None, true, 1000);
 	this.onClose.dispatch();
 }
-Window.prototype.setTheme=function(theme){
-	this._radius=theme.radius;
-	this._color=theme.bgcolor;
-	this._border=this.getProperty(theme.border).size;
-	this._font=this.getProperty(theme.font);
-	if(theme.texture!=null)this._hasTexture=true;
+Window.prototype.setFont=function(theme){
 }

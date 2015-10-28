@@ -4,58 +4,64 @@
       <meta charset="UTF-8" />
       <title>hello phaser!</title>
       <script src="phaser.min.js"></script>
-  		<script src="GUIFactory.js"></script>
-  		<script src="GUIObject.js"></script>
-  		<script src="GUIContainer.js"></script>
-      <script src="canvas/canvasCtrl.js"></script>
-  		<script src="canvas/button.js"></script>
-  		<script src="canvas/scrollbar.js"></script>
-  		<script src="canvas/window.js"></script>
-  		<script src="canvas/checkbox.js"></script>
-  		<script src="canvas/radiobox.js"></script>
-  		<script src="canvas/textInput.js"></script>
-  		<script src="canvas/dropdown.js"></script>
-  		<script src="canvas/toggle.js"></script>
-  		<script src="canvas/tooltip.js"></script>
-  		<script src="canvas/listview.js"></script>
+  		<script src="guiFactory.js"></script>
+  		<script src="guiObject.js"></script>
+  		<script src="guiContainer.js"></script>
+      <script src="components/canvasCtrl.js"></script>
+  		<script src="components/button.js"></script>
+  		<script src="components/scrollbar.js"></script>
+  		<script src="components/window.js"></script>
+  		<script src="components/checkbox.js"></script>
+  		<script src="components/radiobox.js"></script>
+  		<script src="components/textInput.js"></script>
+  		<script src="components/dropdown.js"></script>
+  		<script src="components/toggle.js"></script>
+  		<script src="components/tooltip.js"></script>
+  		<script src="components/listview.js"></script>
+  		<script src="components/rating.js"></script>
     </head>
     <body>
 
     <script type="text/javascript">
     //window.onload = function() {
       var game = new Phaser.Game(480, 320, Phaser.CANVAS, '');
-      game.gui=new RSCanvasGUI(game);
-      game.gui.loadTheme('theme.json');
+      game.gui=new RSGUI(game);
+      //game.gui.loadTheme('theme/theme.json');
       first_state={
         preload:function() {
-          game.gui.loadAsset();
+          //game.gui.loadAsset();
+		  game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;//SHOW_ALL;
         },
         create:function() {
           game.stage.backgroundColor = 0xcccccc;
           button1=game.gui.add.button(0,0,"showWindow");
           button2=game.gui.add.button(150,0,"closeWindow");
           button3=game.gui.add.button(300,0,"click to next state");
-          var buttons=game.gui.add.window(180,100,400,240,"window");
-          var button4=game.gui.add.radiobox(200,130,"checkbox",buttons);
-          var button5=game.gui.add.textinput(20,130,"text",buttons);
-          var button6=game.gui.add.toggle(20,0,"toggle",buttons);
-          var button7=game.gui.add.dropdown(20,80,"text",buttons);
-          var button8=game.gui.add.tooltip(30,20,'this is a tip',buttons);
-          var button9=game.gui.add.scrollbar(350,0,buttons);
-          var button10=game.gui.add.listview(240,10,100,100,buttons);
+          var mywin=game.gui.add.window(240,150,400,240,"window");
+          var button4=game.gui.add.radiobox(200,120,"radiobox",mywin);
+          var button14=game.gui.add.checkbox(200,140,"checkbox",mywin);
+          var button5=game.gui.add.textinput(20,130,"text",mywin);
+          var button6=game.gui.add.toggle(20,0,"toggle",mywin);
+          var button16=game.gui.add.rating(120,20,3,mywin);
+          var button7=game.gui.add.dropdown(20,80,"text",mywin);
+          var button8=game.gui.add.tooltip(30,20,'this is a tip',mywin);
+          var button9=game.gui.add.scrollbar(350,10,20,180,'vertical',mywin);
+          var button19=game.gui.add.scrollbar(20,180,300,20,'horizontal',mywin);
+          var button10=game.gui.add.listview(240,10,100,100,mywin);
           var button11=game.gui.add.button(-20,0,"this is a wide button",button10);
           var button12=game.gui.add.button(-20,40,"this is a wide button",button10);
+		  mywin.input.enableDrag();
           //button3.group='group1';
-          //buttons.show();
+          //mywin.show();
           button2.events.onInputDown.add(function(){
-            buttons.close();
+            mywin.close();
           },this);
           button1.events.onInputDown.add(function(){
-            buttons.show();
+            mywin.show();
           },this);
-          button3.events.onInputDown.add(function(){
+          /*button3.events.onInputDown.add(function(){
             game.state.start('second');
-          },this);
+          },this);*/
         }
       }
       second_state={

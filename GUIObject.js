@@ -18,7 +18,7 @@ GUIObject = function (game, x, y, width, height) {
 	this._minHeight=null;
 	this._borderColor='#ccc';
 	this._focus=false;
-	//this._theme=null;
+	this._value;
 	this._font={'family':'Arial','size':16,'color':'#000'};
 	this.inputEnabled = true;
 	//Redirect the input events to here so we can handle animation updates, etc
@@ -41,16 +41,11 @@ GUIObject.prototype.update = function() {
 	else
 		this.drawCanvas();
 };
+
 GUIObject.prototype.drawTexture=function(){ }
+
 GUIObject.prototype.drawCanvas=function(){ }
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputOverHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
+
 GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
 	//  If the Pointer was only just released then we don't fire an over event
 	if (pointer.justReleased())
@@ -68,14 +63,6 @@ GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
 	this._state='over';
 };
 
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputOutHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
 GUIObject.prototype.onInputOutHandler = function (sprite, pointer) {
 	this._state='up';
 	if (this.onInputOut)
@@ -84,14 +71,6 @@ GUIObject.prototype.onInputOutHandler = function (sprite, pointer) {
 	}
 };
 
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputDownHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
 GUIObject.prototype.onInputDownHandler = function (sprite, pointer) {
 
 	if (this.onInputDown)
@@ -102,14 +81,6 @@ GUIObject.prototype.onInputDownHandler = function (sprite, pointer) {
 	this.focus();
 };
 
-/**
-* Internal function that handles input events.
-*
-* @method Phaser.Button#onInputUpHandler
-* @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
-* @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
-*/
 GUIObject.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 	//  Input dispatched early, before state change (but after sound)
 
@@ -156,6 +127,7 @@ GUIObject.prototype.setTheme=function(theme){
 	this._radius=theme.radius;
 	this._color=theme.bgcolor;
 	this._border=this.getProperty(theme.border).size;
+	this._borderColor=this.getProperty(theme.border).color;
 	this._font=this.getProperty(theme.font);
 	this.setFont(this._font);
 	if(theme.texture!=null)
@@ -178,4 +150,7 @@ GUIObject.prototype.resize=function(width,height){
 }
 GUIObject.prototype.getFont=function(){
 	return this._font.size+'px '+this._font.family;
+}
+GUIObject.prototype.setBGColor=function(color){
+	this._color=color;
 }
