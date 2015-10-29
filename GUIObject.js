@@ -1,12 +1,11 @@
-//  Here is a custom game object
+// base gui object
 GUIObject = function (game, x, y, width, height) {
 	//width=256||width;
 	//height=256||height;
 	this._bmd=new Phaser.BitmapData(game, '', width, height);
 	Phaser.Sprite.call(this, game, x ,y, this._bmd);
-	//this.game.world.addChild(this._inputHandler);
 	this._hasTexture=false;
-
+	this._text=null;
 	this._state='up';
 	this._border=0;
 	this._radius=1;
@@ -18,7 +17,8 @@ GUIObject = function (game, x, y, width, height) {
 	this._minHeight=null;
 	this._borderColor='#ccc';
 	this._focus=false;
-	this._value;
+	this._autofit=true;
+	this._warp=false;
 	this._font={'family':'Arial','size':16,'color':'#000'};
 	this.inputEnabled = true;
 	//Redirect the input events to here so we can handle animation updates, etc
@@ -27,71 +27,43 @@ GUIObject = function (game, x, y, width, height) {
 	this.events.onInputDown.add(this.onInputDownHandler, this);
 	this.events.onInputUp.add(this.onInputUpHandler, this);
 
-	this.onMove  	= new Phaser.Signal();
-	this.onResize = new Phaser.Signal();
-	this.onChange = new Phaser.Signal();
+	this.onResize	= new Phaser.Signal();
 	this.onFocus	= new Phaser.Signal();
 	this.onBlur		= new Phaser.Signal();
 };
 GUIObject.prototype = Object.create(Phaser.Sprite.prototype);
 GUIObject.prototype.constructor = GUIObject;
 GUIObject.prototype.update = function() {
-	if(this._hasTexture)
-		this.drawTexture();
-	else
-		this.drawCanvas();
+	this.draw();
 };
 
-GUIObject.prototype.drawTexture=function(){ }
-
-GUIObject.prototype.drawCanvas=function(){ }
+GUIObject.prototype.draw=function(){ }
 
 GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
-	//  If the Pointer was only just released then we don't fire an over event
-	if (pointer.justReleased())
-	{
-		return;
-	}
-	if (this.onOverMouseOnly && !pointer.isMouse)
-	{
-		return;
-	}
-	if (this.onInputOver)
-	{
-		this.onInputOver.dispatch(this, pointer);
-	}
+	
+	if (pointer.justReleased())	return;
+	if (this.onOverMouseOnly && !pointer.isMouse) return;
+	if (this.onInputOver)this.onInputOver.dispatch(this, pointer);
 	this._state='over';
 };
 
 GUIObject.prototype.onInputOutHandler = function (sprite, pointer) {
+	
+	if (this.onInputOut)this.onInputOut.dispatch(this, pointer);
 	this._state='up';
-	if (this.onInputOut)
-	{
-		this.onInputOut.dispatch(this, pointer);
-	}
 };
 
 GUIObject.prototype.onInputDownHandler = function (sprite, pointer) {
 
-	if (this.onInputDown)
-	{
-		this.onInputDown.dispatch(this, pointer);
-	}
+	if (this.onInputDown)this.onInputDown.dispatch(this, pointer);
 	this._state='down';
 	this.focus();
 };
 
 GUIObject.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
-	//  Input dispatched early, before state change (but after sound)
 
-	if (this.onInputUp)
-	{
-		this.onInputUp.dispatch(this, pointer, isOver);
-	}
-	if (this.freezeFrames)
-	{
-		return;
-	}
+	if (this.onInputUp)	this.onInputUp.dispatch(this, pointer, isOver);
+	if (this.freezeFrames) return;
 	this._state='up';
 };
 GUIObject.prototype.focus=function(){
@@ -104,11 +76,11 @@ GUIObject.prototype.focus=function(){
 			}
 		}
 	}
-	this.onFocus.dispatch();
+	this.onFocus.dispatch(this);
 }
 GUIObject.prototype.blur=function(){
 	this._focus=false;
-	this.onBlur.dispatch();
+	this.onBlur.dispatch(this);
 }
 GUIObject.prototype.getProperty=function(property){
 	dict={};
@@ -126,16 +98,27 @@ GUIObject.prototype.getProperty=function(property){
 GUIObject.prototype.setTheme=function(theme){
 	this._radius=theme.radius;
 	this._color=theme.bgcolor;
-	this._border=this.getProperty(theme.border).size;
-	this._borderColor=this.getProperty(theme.border).color;
-	this._font=this.getProperty(theme.font);
-	this.setFont(this._font);
-	if(theme.texture!=null)
-		this._hasTexture=true;
+	this.setBorder(theme.border,false);
+	this.setFont(theme.font,false);
+	if(theme.texture!=null) this._hasTexture=true;
+	this.fit(this._autofit);
 }
-GUIObject.prototype.setFont=function(font){
-	this._font=font;
-	txtsize=getTextSize(font.family,font.size,this._text);
+GUIObject.prototype.setBorder=function(border,fit){
+	if(typeof border != "object")
+		border=this.getProperty(border);
+	if(border.size!=null)this._border=border.size;
+	if(border.color!=null)this._borderColor=border.color;
+	if(fit!=false) this.fit();
+}
+GUIObject.prototype.setFont=function(font,fit){
+	if(typeof font != "object")
+		font=this.getProperty(font);
+	for(key in font)this._font[key]=font[key];
+	if(fit!=false) this.fit();
+}
+GUIObject.prototype.fit=function(){
+	if(this._text==null) return;
+	txtsize=getTextSize(this._font.family,this._font.size,this._text,this._warp);
 	width = 2*this._radius+2*this._border+txtsize.width;
 	height = 2*this._radius+2*this._border+txtsize.height;
 	this.resize(parseInt(width),parseInt(height));
@@ -145,8 +128,10 @@ GUIObject.prototype.resize=function(width,height){
 	if(this._minWidth!=null && this._originWidth<this._minWidth)
 		this._originWidth=this._minWidth;
 	this._originHeight=height+this._extendHeight;
+	if(this._minHeight!=null && this._originHeight<this._minHeight)
+		this._originHeight=this._minHeight;
 	this._bmd.resize(this._originWidth,this._originHeight);
-	this.onResize.dispatch();
+	this.onResize.dispatch(this, width, height);
 }
 GUIObject.prototype.getFont=function(){
 	return this._font.size+'px '+this._font.family;

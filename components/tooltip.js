@@ -1,15 +1,15 @@
 
-ToolTip = function (game, x, y,text,warp) {
+ToolTip = function (game, x, y,text) {
   GUIObject.call(this, game, x, y);
   this._text=text;
   this._arrow={height:10,width:20};
-  this._warp=warp;
+  this._warp=true;
   this._extendHeight=this._arrow.height;
 };
 ToolTip.prototype = Object.create(GUIObject.prototype);
 ToolTip.prototype.constructor = ToolTip;
 
-ToolTip.prototype.drawCanvas=function(){
+ToolTip.prototype.draw=function(){
 	var b=this._border;
 	var r=this._radius;
 	var w=this._originWidth-b;
@@ -41,5 +41,9 @@ ToolTip.prototype.drawCanvas=function(){
 	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='top';
-	this._bmd.ctx.warpText(this._text, b+r, b+r+a.height,this._warp,16);
+	this._bmd.ctx.warpText(this._text, b+r, b+r+a.height);
+}
+ToolTip.prototype.setText=function(text){
+	this._text=text;
+	this.fit();
 }

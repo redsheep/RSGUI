@@ -12,8 +12,10 @@ GUIContainer = function (game, x, y, width, height) {
 	this._childmask.isMask = true;
 	Phaser.Group.prototype.addChild.call(this,this._childmask);
 	var p=this._padding;
-	this._focusChild=null;
+	this._overChild=null;
 	this._downChild=null;
+	this._autofit=false;
+	this.events.onInputOut.add(this.onInputOutHandler, this);
 };
 GUIContainer.prototype = Object.create(GUIObject.prototype);
 GUIContainer.prototype.constructor = GUIContainer;
@@ -21,16 +23,16 @@ GUIContainer.prototype.update = function() {
 	GUIObject.prototype.update.call(this);
 	Phaser.Group.prototype.update.call(this);
 	//if(this.children.length==0)
-	/*if(this.hitTest(this.game.input.mousePointer,this)){
+	if(this.hitTest(this.game.input.mousePointer,this)){
 		hitChild=this.getHitChild(this.game.input.mousePointer);
-		if(this._focusChild!=hitChild){
-			if(this._focusChild!=null)
-				this._focusChild.onInputOutHandler(this._focusChild,this.game.input.mousePointer);
-			if(hitChild!=null)
+		if(this._overChild!=hitChild){
+			if(this._overChild!=null && this._overChild.events._onInputOut!=null)
+				this._overChild.onInputOutHandler(this._overChild,this.game.input.mousePointer);
+			if(hitChild!=null && hitChild.events._onInputOver!=null)
 				hitChild.onInputOverHandler(hitChild,this.game.input.mousePointer);
 		}
-		this._focusChild=hitChild;
-	}*/
+		this._overChild=hitChild;
+	}
 };
 GUIContainer.prototype.getHitChild=function(pointer){
 	if(this.hitTest(pointer,this)==false) return null;
@@ -64,6 +66,7 @@ GUIContainer.prototype.fireAllChildEvent=function(event,pointer){
 	}
 }
 GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
+	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 	this._downChild=this.getHitChild(pointer);
 	if(this._downChild!=null){
 		this._downChild.onInputDownHandler(this._downChild,pointer);
@@ -73,9 +76,16 @@ GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
 	}
 }
 GUIContainer.prototype.onInputUpHandler=function(sprite,pointer){
+	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer);
 	if(this._downChild!=null)
 		this._downChild.onInputUpHandler(this._downChild,pointer);
 	this._downChild=null;
+}
+GUIContainer.prototype.onInputOutHandler=function(sprite,pointer){
+	GUIObject.prototype.onInputOutHandler.call(this,sprite,pointer);
+	if(this._overChild!=null && this._overChild.events._onInputOut!=null)
+		this._overChild.onInputOutHandler(this._overChild,pointer);
+	this._overChild=null;
 }
 GUIContainer.prototype.addChild=function(object){
 	Phaser.Group.prototype.addChild.call(this,object);
@@ -98,4 +108,9 @@ GUIContainer.prototype.removeAll=function(){
 		child = this.children[i];
 		this.removeChild(child);
 	}
+}
+GUIContainer.prototype.resize=function(width,height){
+	GUIObject.prototype.resize.call(this,width,height);
+	this._childmask.clear();
+	this._childmask.drawRect(0,0,width,height);
 }

@@ -40,7 +40,7 @@ TextInput = function (game, x, y,text) {
 TextInput.prototype = Object.create(GUIObject.prototype);
 TextInput.prototype.constructor = TextInput;
 
-TextInput.prototype.drawCanvas=function(){
+TextInput.prototype.draw=function(){
 	var b=this._border;
 	var r=this._radius;
 	var w=this._originWidth;
@@ -51,10 +51,16 @@ TextInput.prototype.drawCanvas=function(){
 	this._bmd.ctx.lineWidth=b;
 	this._bmd.ctx.strokeStyle = this._borderColor;
 	//draw background
-	this._bmd.ctx.fillStyle=this._color;
-	this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true,'');
-	this._bmd.ctx.fill();
-	this._bmd.ctx.strokeBorder(b);
+	if(!this._hasTexture){
+		this._bmd.ctx.fillStyle=this._color;
+		this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true,'');
+		this._bmd.ctx.fill();
+		this._bmd.ctx.strokeBorder(b);
+	}else{
+		var W=this.game.cache.getImage(this._bgFrame).width;
+		var H=this.game.cache.getImage(this._bgFrame).height;
+		this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
+	}
 	//draw text mask
 	this._bmd.ctx.save();
 	this._bmd.ctx.beginPath();
@@ -73,34 +79,6 @@ TextInput.prototype.drawCanvas=function(){
 	this._bmd.ctx.fillStyle=fontcolor;
 	if(this._focus && this._delay++%66<33){
 		this._bmd.ctx.fillRect(this._cursor,r+b,1, h-2*r-2*b);
-	}
-}
-TextInput.prototype.drawTexture=function(){
-	this._bmd.cls();
-	var b=this._border;
-	var w=this._originWidth;
-	var h=this._originHeight;
-	var r=this._radius;
-	var W=this.game.cache.getImage(this._bgFrame).width;
-	var H=this.game.cache.getImage(this._bgFrame).height;
-	var fontcolor=this._font.color;
-	var font=this.getFont();
-	this._bmd.cls();
-	this._bmd.ctx.fillRect(r+b,r+b,w-2*r-2*b,h-2*r-2*b);
-	this._bmd.ctx.globalCompositeOperation="source-in";
-	this._bmd.ctx.font=font;
-	this._bmd.ctx.fillStyle=fontcolor;
-	this._bmd.ctx.textBaseline="top";
-	var textwidth=getTextSize(this._font.family,this._font.size,this._text).width;
-	var offset=Math.max(0,textwidth-w+2*r+2*b);
-	this._bmd.ctx.fillText(this._text, r+b-offset,r+b);
-	this._bmd.ctx.globalCompositeOperation="destination-over";
-	if(this._focus && this._delay++%66<33){
-		this._bmd.ctx.fillRect(this._cursor,r+b,1, h-2*r-2*b);
-	}
-	this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
-	if(this._focus && this._delay++%66<33){
-		this._bmd.ctx.fillRect(this._cursor,r,1, h-2*r);
 	}
 }
 TextInput.prototype.getCursorPos=function(pos){
@@ -140,3 +118,10 @@ TextInput.prototype.onInputDownHandler = function (sprite, pointer) {
 	}, 0);
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
+TextInput.prototype.getValue=function(){
+	return this._text;
+}
+TextInput.prototype.setText=function(text){
+	this._text=text;
+	this.fit();
+}
