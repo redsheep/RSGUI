@@ -28,6 +28,18 @@ Window.prototype.draw=function(){
 	this._bmd.cls();
 	this._bmd.ctx.lineWidth=b;
 	this._bmd.ctx.strokeStyle = this._borderColor;
+	//draw background of window
+	if(!this._hasTexture){
+		this._bmd.ctx.fillStyle= this._color;
+		this._bmd.ctx.roundRect(b, th, w-2*b, h-th-2*b, 12, 'down');
+		this._bmd.ctx.fill();
+		this._bmd.ctx.strokeBorder(b);
+	}else{
+		//draw with background texture
+		var W=this.game.cache.getImage(this._window_bg).width;
+		var H=this.game.cache.getImage(this._window_bg).height;
+		this._bmd.generateNinePatchTexture(this._window_bg,0,th/2,w,h-th/2,r,W,H);
+	}
 	//draw titlebar of window
 	if(!this._hasTexture){
 		if(this._focus){
@@ -44,18 +56,6 @@ Window.prototype.draw=function(){
 		var TH=this.game.cache.getImage(this._window_title).height;
 		var TX=this._width/2-TW/2;
 		this._bmd.horizontalThreePatchTexture(this._window_title,0,0,w,th,TH,TW,TH);
-	}
-	//draw background of window
-	if(!this._hasTexture){
-		this._bmd.ctx.fillStyle= this._color;
-		this._bmd.ctx.roundRect(b, th, w-2*b, h-th-2*b, 12, 'down');
-		this._bmd.ctx.fill();
-		this._bmd.ctx.strokeBorder(b);
-	}else{
-		//draw with background texture
-		var W=this.game.cache.getImage(this._window_bg).width;
-		var H=this.game.cache.getImage(this._window_bg).height;
-		this._bmd.generateNinePatchTexture(this._window_bg,0,th/2,w,h-th/2,r,W,H);
 	}
 	//draw title text
 	this._bmd.ctx.fillStyle=fontcolor;

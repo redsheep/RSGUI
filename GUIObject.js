@@ -40,7 +40,7 @@ GUIObject.prototype.update = function() {
 GUIObject.prototype.draw=function(){ }
 
 GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
-	
+
 	if (pointer.justReleased())	return;
 	if (this.onOverMouseOnly && !pointer.isMouse) return;
 	if (this.onInputOver)this.onInputOver.dispatch(this, pointer);
@@ -48,7 +48,7 @@ GUIObject.prototype.onInputOverHandler = function (sprite, pointer) {
 };
 
 GUIObject.prototype.onInputOutHandler = function (sprite, pointer) {
-	
+
 	if (this.onInputOut)this.onInputOut.dispatch(this, pointer);
 	this._state='up';
 };
@@ -96,6 +96,7 @@ GUIObject.prototype.getProperty=function(property){
 	return dict;
 }
 GUIObject.prototype.setTheme=function(theme){
+	if(theme==null) return;
 	this._radius=theme.radius;
 	this._color=theme.bgcolor;
 	this.setBorder(theme.border,false);

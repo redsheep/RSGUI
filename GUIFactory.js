@@ -52,6 +52,12 @@ GUIFactory.prototype = {
     object.setTheme(this.theme.scrollbar);
 		return object;
 	},
+	processbar:function(x,y,width,height,type,container){
+		var object = new ProcessBar(this.game,x,y,width,height,type);
+		this.addToGroup(container,object);
+    object.setTheme(this.theme.processbar);
+		return object;
+	},
 	dropdown:function(x,y,text,container){
 		var object = new DropDown(this.game,x,y,text);
 		this.addToGroup(container,object);
@@ -155,6 +161,13 @@ GUIFactory.prototype.getDefaultTheme=function(){
       'border':'2px #fff',
       'font':'Arial 16px #000'
     },
+    'processbar':{
+      'radius':5,
+      'bgcolor':'#000',
+      'button':'#fff',
+      'border':'2px #fff',
+      'font':'Arial 16px #000'
+    },
     'textinput':{
       'radius':4,
       'bgcolor':'#fff',
@@ -179,7 +192,7 @@ GUIFactory.prototype.getDefaultTheme=function(){
       'radius':16,
       'bgcolor':'#ccc',
       'border':'2px #fff',
-      'font':'Arial 16px #000'	
+      'font':'Arial 16px #000'
 	}
   }
 }

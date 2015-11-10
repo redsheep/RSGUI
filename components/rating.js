@@ -20,7 +20,6 @@ function(cx,cy,spikes,outerRadius,innerRadius) {
     this.lineTo(cx, cy - outerRadius)
     this.closePath();
 }
-
 Rating = function (game, x, y, stars) {
 
 	GUIObject.call(this, game, x, y, 16, 16*3);
