@@ -36,7 +36,6 @@
       game.gui=new RSGUI(game);
       first_state={
         preload:function() {
-          //game.gui.loadAsset();
           game.gui.loadTheme('theme/theme.json');
 		      //game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;//SHOW_ALL;
         },
@@ -68,9 +67,9 @@
           button1.events.onInputDown.add(function(){
             mywin.show();
           },this);
-          /*button3.events.onInputDown.add(function(){
+          button3.events.onInputDown.add(function(){
             game.state.start('second');
-          },this);*/
+          },this);
         }
       }
       second_state={

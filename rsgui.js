@@ -90,18 +90,26 @@ RSGUI = function(game){
 	this.add = new GUIFactory(game);
 }
 RSGUI.prototype.constructor = RSGUI;
-RSGUI.prototype.loadTheme=function(url){
-	var self=this;
+RSGUI.prototype.loadTheme=function(theme){
+  var self=this;
   self.add.waitTheme();
-	var xobj = new XMLHttpRequest();
-	xobj.overrideMimeType("application/json");
-	xobj.open('GET', url, true);
-	xobj.onreadystatechange = function () {
-		if (xobj.readyState == 4 && xobj.status == "200") {
-			theme=JSON.parse(xobj.responseText);
-			theme.path=url.substring(0, url.lastIndexOf("/") + 1);
-			self.add.setTheme(theme);
-		}
-	};
-	xobj.send(null);
+  if(typeof theme == 'object'){
+    self.add.setTheme(theme);
+  }else{
+    var url=theme;
+  	var xobj = new XMLHttpRequest();
+  	xobj.overrideMimeType("application/json");
+  	xobj.open('GET', url, true);
+  	xobj.onreadystatechange = function () {
+  		if (xobj.readyState == 4 && xobj.status == "200") {
+  			theme=JSON.parse(xobj.responseText);
+  			theme.path=url.substring(0, url.lastIndexOf("/") + 1);
+  			self.add.setTheme(theme);
+  		}
+  	};
+  	xobj.send(null);
+  }
+}
+RSGUI.prototype.ready=function(callback){
+  this.add.ready(callback);
 }

@@ -3,6 +3,7 @@ GUIFactory = function(game){
   this.theme=this.getDefaultTheme();
 	this._theme_ready=true;
 	this.queue=[];
+	this.callbacks=[];
 }
 
 GUIFactory.prototype.constructor = GUIFactory;
@@ -104,12 +105,21 @@ GUIFactory.prototype = {
 	},
 	themeReady:function(theme){
 		this._theme_ready=true;
-		for( key in theme)
-			this.theme[key]=theme[key];
+		for( key in theme){
+			if(key=='webfont'||key=='path')continue;
+			component=theme[key];
+			for(property in component){
+				this.theme[key][property]=component[property];
+			}
+		}
 		for(var i=0;i<this.queue.length;i++){
 			this.queue[i].obj.setTheme(this.theme[this.queue[i].type]);
 		}
 		this.queue=[];
+		for(var i=0;i<this.callbacks.length;i++){
+			this.callbacks[i]();
+		}
+		this.callbacks=[];
 	},
 	setObjectTheme:function(object,type){
 		object.setTheme(this.theme[type]);
@@ -130,6 +140,7 @@ GUIFactory.prototype = {
 		}
 	},
   loadAsset:function(theme){
+		var numTextures=0;
   	var loader=new Phaser.Loader(this.game);
   	for(component in theme){
 		if(typeof(theme[component])!='object')
@@ -140,12 +151,24 @@ GUIFactory.prototype = {
   				assetkey = 'rsgui-'+component+'-'+key;
   				path = theme.path+texture[key];
   				loader.image(assetkey, path);
+					numTextures++;
   			}
   		}
   	}
-		loader.onLoadComplete.addOnce(this.themeReady,this,0,theme);
-  	loader.start();
-  }
+		if(numTextures>0){
+			loader.onLoadComplete.addOnce(this.themeReady,this,0,theme);
+	  	loader.start();
+		}else{
+			this.themeReady(theme);
+		}
+  },
+	ready:function(callback){
+		if(!this._theme_ready){
+			this.callbacks.push(callback);
+		}else{
+			callback();
+		}
+	}
 }
 GUIFactory.prototype.getDefaultTheme=function(){
   return {
@@ -230,6 +253,6 @@ GUIFactory.prototype.getDefaultTheme=function(){
       'bgcolor':'#ccc',
       'border':'2px #fff',
       'font':'Arial 16px #000'
-	}
+		}
   }
 }
