@@ -92,13 +92,15 @@ GUIObject.prototype.getProperty=function(property){
 	  property=property.replace(/['"]+/g, '');
 	}
 	data = property.match(/\S+/g);
-	for(i=0;i<data.length;i++){
-		if(data[i].indexOf('#')!=-1)
-			dict.color=data[i];
-		else if(data[i].indexOf('px')!=-1)
-			dict.size=parseInt(data[i].substring(0,data[i].length-2));
-		else
-			dict.family=data[i];
+	if(data!=null){
+		for(i=0;i<data.length;i++){
+			if(data[i].indexOf('#')!=-1)
+				dict.color=data[i];
+			else if(data[i].indexOf('px')!=-1)
+				dict.size=parseInt(data[i].substring(0,data[i].length-2));
+			else
+				dict.family=data[i];
+		}
 	}
 	return dict;
 }

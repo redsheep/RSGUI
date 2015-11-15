@@ -59,6 +59,9 @@
           var button12=game.gui.add.button(-20,40,"this is a wide button",button10);
           var button7=game.gui.add.dropdown(20,80,"text",mywin);
           mywin.input.enableDrag();
+          game.gui.ready(function(){
+            button2.setFont("'Fjalla One'");
+          });
           //button3.group='group1';
           //mywin.show();
           button2.events.onInputDown.add(function(){

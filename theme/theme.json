@@ -1,7 +1,7 @@
 {
   "webfont":{
     "google": {
-      "families": ["Montserrat","Bangers","Fjalla One"]
+      "families": ["Nosifer","Bangers","Fjalla One"]
     },
     "custom": {
       "families": ["My Font"]
@@ -24,7 +24,7 @@
     "up":"#fff",
     "down":"#999",
     "border":"1px #ccc",
-    "font":"'My Font' 16px #000",
+    "font":"Arial 16px #000",
     "texture":{
       "up":"images/btn_up.png",
       "down":"images/btn_down.png"
@@ -35,7 +35,7 @@
     "bgcolor":"#fff",
     "select":"skyblue",
     "border":"1px #ccc",
-    "font":"Arial 16px #000",
+    "font":"'My Font' 16px #000",
     "texture":{
       "bg":"images/scroll_bg.png"
     }
