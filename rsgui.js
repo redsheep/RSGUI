@@ -105,6 +105,3 @@ RSGUI.prototype.loadTheme=function(url){
 	};
 	xobj.send(null);
 }
-RSGUI.prototype.loadAsset=function(){
-	this.add.loadAsset();
-}
