@@ -7,7 +7,7 @@ CheckBox = function (game, x, y, text) {
 	this._check=false;
 	this._onFrame = "rsgui-checkbox-on";
 	this._offFrame = "rsgui-checkbox-off";
-	this._frame=this._offFrame;
+	this._frame='on';
 };
 CheckBox.prototype = Object.create(GUIObject.prototype);
 CheckBox.prototype.constructor = CheckBox;
@@ -35,9 +35,8 @@ CheckBox.prototype.draw=function(){
 			this._bmd.ctx.fill();
 		}
 	}else{
-		var W=this.game.cache.getImage(this._frame).width;
-		var H=this.game.cache.getImage(this._frame).height;
-		this._bmd.copy(this._frame,0,0,W,H,0,0,h,h);
+		var texture=this._texture[this._frame];
+		this._bmd.copy(texture.key,0,0,texture.width,texture.height,0,0,h,h);
 	}
 	//draw text
 	this._bmd.ctx.font=font;
@@ -50,13 +49,16 @@ CheckBox.prototype.onInputDownHandler = function (sprite, pointer) {
 	else this.check();
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
+CheckBox.prototype.getType=function(){
+	return 'checkbox';
+}
 CheckBox.prototype.check=function(){
 	this._check=true;
-	this._frame=this._onFrame;
+	this._frame='on';
 }
 CheckBox.prototype.uncheck=function(){
 	this._check=false;
-	this._frame=this._offFrame;
+	this._frame='off';
 }
 CheckBox.prototype.setTheme=function(theme){
 	this._checkColor=theme.check;

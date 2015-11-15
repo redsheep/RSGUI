@@ -7,7 +7,7 @@ RadioBox = function (game, x, y, text) {
 	this._check=false;
 	this._onFrame = "rsgui-checkbox-on";
 	this._offFrame = "rsgui-checkbox-off";
-	this._frame=this._offFrame;
+	this._frame='off';
 	this.onChange =new Phaser.Signal();
 };
 RadioBox.prototype = Object.create(GUIObject.prototype);
@@ -20,7 +20,7 @@ RadioBox.prototype.draw=function(){
 	var c=h+this._seprate;
 	var fontcolor=this._font.color;
 	var font=this.getFont();
-	
+
 	this._bmd.cls();
 	this._bmd.ctx.strokeStyle = this._borderColor;
 	if(!this._hasTexture){
@@ -35,9 +35,8 @@ RadioBox.prototype.draw=function(){
 			this._bmd.ctx.fill();
 		}
 	}else{
-		var W=this.game.cache.getImage(this._frame).width;
-		var H=this.game.cache.getImage(this._frame).height;
-		this._bmd.copy(this._frame,0,0,W,H,0,0,h,h);
+		var texture = this._texture[this._frame];
+		this._bmd.copy(texture.key,0,0,texture.width,texture.height,0,0,h,h);
 	}
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.fillStyle=fontcolor;
@@ -49,9 +48,12 @@ RadioBox.prototype.onInputDownHandler = function (sprite, pointer) {
 	else this.check();
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
+RadioBox.prototype.getType=function(){
+	return 'radiobox';
+}
 RadioBox.prototype.check=function(){
 	this._check=true;
-	this._frame=this._onFrame;
+	this._frame='on';
 	if(this.parent!=null){
 		for(i=0;i<this.parent.children.length;i++){
 			var child=this.parent.children[i];
@@ -63,7 +65,7 @@ RadioBox.prototype.check=function(){
 }
 RadioBox.prototype.uncheck=function(){
 	this._check=false;
-	this._frame=this._offFrame;
+	this._frame='off';
 }
 RadioBox.prototype.setTheme=function(theme){
 	this._checkColor=theme.check;

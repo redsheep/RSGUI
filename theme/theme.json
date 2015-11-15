@@ -1,4 +1,12 @@
 {
+  "webfont":{
+    "google": {
+      "families": ["Montserrat","Bangers","Fjalla One"]
+    },
+    "custom": {
+      "families": ["My Font"]
+    }
+  },
   "window":{
     "radius":20,
     "bgcolor":"#ddd",
@@ -16,7 +24,7 @@
     "up":"#fff",
     "down":"#999",
     "border":"1px #ccc",
-    "font":"Arial 16px #000",
+    "font":"'My Font' 16px #000",
     "texture":{
       "up":"images/btn_up.png",
       "down":"images/btn_down.png"

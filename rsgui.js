@@ -17,7 +17,7 @@ function getTextSize(font,fontSize,text,warp,bold){
     var size = {width:width, height:height};
     return size;
 }
-CanvasRenderingContext2D.prototype.warpText= 
+CanvasRenderingContext2D.prototype.warpText=
 function(text, x, y ) {
 	property=this.font.split(' ');
 	for(i=0;i<property.length;i++)
@@ -90,9 +90,9 @@ RSGUI = function(game){
 	this.add = new GUIFactory(game);
 }
 RSGUI.prototype.constructor = RSGUI;
-
 RSGUI.prototype.loadTheme=function(url){
 	var self=this;
+  self.add.waitTheme();
 	var xobj = new XMLHttpRequest();
 	xobj.overrideMimeType("application/json");
 	xobj.open('GET', url, true);

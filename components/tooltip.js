@@ -43,6 +43,9 @@ ToolTip.prototype.draw=function(){
 	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.warpText(this._text, b+r, b+r+a.height);
 }
+ToolTip.prototype.getType=function(){
+	return 'tooltip';
+}
 ToolTip.prototype.setText=function(text){
 	this._text=text;
 	this.fit();

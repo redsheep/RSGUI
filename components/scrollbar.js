@@ -14,7 +14,7 @@ ScrollBar = function (game, x, y, width, height, type) {
 	this._btnFrame='rsgui-scrollbar-btn';
 	this._downoffset=0;
 	this._autofit=false;
-	
+
 	this.onChange =new Phaser.Signal();
 };
 ScrollBar.prototype = Object.create(GUIObject.prototype);
@@ -64,16 +64,14 @@ ScrollBar.prototype.draw=function(){
 		this._bmd.ctx.fill();
 	}else{
 		//draw scroll bar and button with texture
-		var W=this.game.cache.getImage(this._bgFrame).width;
-		var H=this.game.cache.getImage(this._bgFrame).height;
-		var TW=this.game.cache.getImage(this._btnFrame).width;
-		var TH=this.game.cache.getImage(this._btnFrame).height;
+		var bgtexture=this._texture['bg'];
+		var btntexture=this._texture['btn'];
 		if(this._scrolltype=='vertical'){
-			this._bmd.verticalThreePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
-			this._bmd.copy(this._btnFrame,0,0,TW,TH,0,p,bh,bh);
+			this._bmd.verticalThreePatchTexture(bgtexture.key,0,0,w,h,r,bgtexture.width,bgtexture.height);
+			this._bmd.copy(btntexture.key,0,0,btntexture.width,btntexture.height,0,p,bh,bh);
 		}else{
-			this._bmd.horizontalThreePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
-			this._bmd.copy(this._btnFrame,0,0,TW,TH,p,0,bh,bh);
+			this._bmd.horizontalThreePatchTexture(bgtexture.key,0,0,w,h,r,bgtexture.width,bgtexture.height);
+			this._bmd.copy(btntexture.key,0,0,btntexture.width,btntexture.height,p,0,bh,bh);
 		}
 	}
 }
@@ -108,6 +106,9 @@ ScrollBar.prototype.onInputDownHandler = function (sprite, pointer) {
 		this._position=Math.max(p+1,0);
 	}
 };
+ScrollBar.prototype.getType=function(){
+	return 'scrollbar';
+}
 ScrollBar.prototype.setTheme=function(theme){
 	GUIObject.prototype.setTheme.call(this,theme);
 	this._buttonColor=theme.button;

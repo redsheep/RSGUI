@@ -57,9 +57,8 @@ TextInput.prototype.draw=function(){
 		this._bmd.ctx.fill();
 		this._bmd.ctx.strokeBorder(b);
 	}else{
-		var W=this.game.cache.getImage(this._bgFrame).width;
-		var H=this.game.cache.getImage(this._bgFrame).height;
-		this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
+		var texture = this._texture['bg'];
+		this._bmd.generateNinePatchTexture(texture.key,0,0,w,h,r,texture.width,texture.height);
 	}
 	//draw text mask
 	this._bmd.ctx.save();
@@ -118,6 +117,9 @@ TextInput.prototype.onInputDownHandler = function (sprite, pointer) {
 	}, 0);
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
+TextInput.prototype.getType=function(){
+	return 'textinput';
+}
 TextInput.prototype.getValue=function(){
 	return this._text;
 }

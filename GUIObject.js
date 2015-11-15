@@ -5,6 +5,7 @@ GUIObject = function (game, x, y, width, height) {
 	this._bmd=new Phaser.BitmapData(game, '', width, height);
 	Phaser.Sprite.call(this, game, x ,y, this._bmd);
 	this._hasTexture=false;
+	this._texture={};
 	this._text=null;
 	this._state='up';
 	this._border=0;
@@ -84,7 +85,13 @@ GUIObject.prototype.blur=function(){
 }
 GUIObject.prototype.getProperty=function(property){
 	dict={};
-	data = property.split(' ');
+	var match = property.match(/"([^"]+)"|'([^']+)'/);
+	if(match) {
+	  dict.family = match[0]; // -> How are you doing?
+	  property=property.replace(match[0], '');
+	  property=property.replace(/['"]+/g, '');
+	}
+	data = property.match(/\S+/g);
 	for(i=0;i<data.length;i++){
 		if(data[i].indexOf('#')!=-1)
 			dict.color=data[i];
@@ -101,7 +108,16 @@ GUIObject.prototype.setTheme=function(theme){
 	this._color=theme.bgcolor;
 	this.setBorder(theme.border,false);
 	this.setFont(theme.font,false);
-	if(theme.texture!=null) this._hasTexture=true;
+	if(theme.texture!=null){
+		for(var key in theme.texture){
+			var cacheKey="rsgui-"+this.getType()+'-'+key;
+			this._texture[key]={}
+			this._texture[key].key=cacheKey;
+			this._texture[key].width=this.game.cache.getImage(cacheKey).width;
+			this._texture[key].height=this.game.cache.getImage(cacheKey).height;
+		}
+		this._hasTexture=true;
+	}
 	this.fit(this._autofit);
 }
 GUIObject.prototype.setBorder=function(border,fit){

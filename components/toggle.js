@@ -6,7 +6,7 @@ ToggleButton = function (game, x, y) {
 	this._onFrame='rsgui-toggle-on';
 	this._offFrame='rsgui-toggle-off';
 	this._btnFrame='rsgui-toggle-btn';
-	this._bgFrame=this._offFrame;
+	this._bgFrame='off';
 	this._onColor='#ccc';
 	this._offColor='#999';
 	this._check=false;
@@ -30,9 +30,8 @@ ToggleButton.prototype.draw=function(){
 		this._bmd.ctx.fill();
 		this._bmd.ctx.strokeBorder(b);
 	}else{
-		var W=this.game.cache.getImage(this._bgFrame).width;
-		var H=this.game.cache.getImage(this._bgFrame).height;
-		this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
+		var texture = this._texture[this._bgFrame];
+		this._bmd.generateNinePatchTexture(texture.key,0,0,w,h,r,texture.width,texture.height);
 	}
 	//draw toggle text -on/-off
 	this._bmd.ctx.font=font;
@@ -48,27 +47,29 @@ ToggleButton.prototype.draw=function(){
 		this._bmd.ctx.fill();
 		this._bmd.ctx.strokeBorder(b);
 	}else{
-		var W=this.game.cache.getImage(this._btnFrame).width;
-		var H=this.game.cache.getImage(this._btnFrame).height;
+		var texture = this._texture['btn'];
 		if(this._check){
-			this._bmd.generateNinePatchTexture(this._btnFrame,w-b-(h-2*b), b, h-2*b, h-2*b,r,W,H);
+			this._bmd.generateNinePatchTexture(texture.key,w-b-(h-2*b), b, h-2*b, h-2*b,r,texture.width,texture.height);
 		}else{
-			this._bmd.generateNinePatchTexture(this._btnFrame,b, b, h-2*b, h-2*b,r,W,H);
+			this._bmd.generateNinePatchTexture(texture.key,b, b, h-2*b, h-2*b,r,texture.width,texture.height);
 		}
 	}
 }
 ToggleButton.prototype.onInputDownHandler = function (sprite, pointer) {
 	if(this._check){
 		this._check=false;
-		this._bgFrame=this._offFrame;
+		this._bgFrame='off';
 		this._color=this._offColor;
 	}else{
 		this._check=true;
-		this._bgFrame=this._onFrame;
+		this._bgFrame='on';
 		this._color=this._onColor;
 	}
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
+ToggleButton.prototype.getType=function(){
+	return 'toggle';
+}
 ToggleButton.prototype.setTheme=function(theme){
 	GUIObject.prototype.setTheme.call(this,theme);
 	this._bottonColor=theme.button;

@@ -41,9 +41,8 @@ DropDown.prototype.draw=function(){
 		this._bmd.ctx.fill();
 		this._bmd.ctx.strokeBorder(b);
 	}else{
-		var W=this.game.cache.getImage(this._bgFrame).width;
-		var H=this.game.cache.getImage(this._bgFrame).height;
-		this._bmd.generateNinePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
+    var texture=this._texture['bg'];
+		this._bmd.generateNinePatchTexture(texture.key,0,0,w,h,r,texture.width,texture.height);
 	}
 	//draw drop down arrow
 	this._bmd.ctx.beginPath();
@@ -61,10 +60,9 @@ DropDown.prototype.draw=function(){
 			this._bmd.ctx.fill();
 			this._bmd.ctx.strokeBorder(b);
 		}else{
-			var W=this.game.cache.getImage(this._bgFrame).width;
-			var H=this.game.cache.getImage(this._bgFrame).height;
-			this._bmd.generateNinePatchTexture(this._bgFrame,0,2*r+textheight,w,
-						textheight*this._options.length+2*r,r,W,H);
+      var texture=this._texture['bg'];
+			this._bmd.generateNinePatchTexture(texture.key,0,2*r+textheight,w,
+						textheight*this._options.length+2*r,r,texture.width,texture.height);
 		}
 		this._bmd.ctx.fillStyle=this._selectColor;
 		this._bmd.ctx.fillRect(b,r+b+this._over*textheight+2*r+2*b+textheight,w-2*b,textheight);
@@ -110,6 +108,9 @@ DropDown.prototype.onInputDownHandler = function (sprite, pointer) {
   this.onInputDown.dispatch(this, pointer);
   GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
+DropDown.prototype.getType=function(){
+	return 'dropdown';
+}
 DropDown.prototype.setTheme=function(theme){
 	GUIObject.prototype.setTheme.call(this,theme);
 	this._selectColor=theme.select;

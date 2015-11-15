@@ -41,18 +41,19 @@ ProcessBar.prototype.draw=function(){
 		this._bmd.ctx.fill();
 	}else{
 		//draw scroll bar and button with texture
-		var W=this.game.cache.getImage(this._bgFrame).width;
-		var H=this.game.cache.getImage(this._bgFrame).height;
-		var TW=this.game.cache.getImage(this._btnFrame).width;
-		var TH=this.game.cache.getImage(this._btnFrame).height;
+		var bgtexture=this._texture['bg'];
+		var btntexture=this._texture['btn'];
 		if(this._scrolltype=='vertical'){
-			this._bmd.verticalThreePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
-			this._bmd.verticalThreePatchTexture(this._btnFrame,0,0,w,p,r,TW,TH);
+			this._bmd.verticalThreePatchTexture(bgtexture.key,0,0,w,h,r,bgtexture.width,bgtexture.height);
+			this._bmd.verticalThreePatchTexture(btntexture.key,0,0,w,p,r,btntexture.width,btntexture.height);
 		}else{
-			this._bmd.horizontalThreePatchTexture(this._bgFrame,0,0,w,h,r,W,H);
-			this._bmd.horizontalThreePatchTexture(this._btnFrame,0,0,p,h,r,TW,TH);
+			this._bmd.horizontalThreePatchTexture(bgtexture.key,0,0,w,h,r,bgtexture.width,bgtexture.height);
+			this._bmd.horizontalThreePatchTexture(btntexture.key,0,0,p,h,r,btntexture.width,btntexture.height);
 		}
 	}
+}
+ProcessBar.prototype.getType=function(){
+	return 'processbar';
 }
 ProcessBar.prototype.setTheme=function(theme){
 	GUIObject.prototype.setTheme.call(this,theme);

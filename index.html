@@ -20,6 +20,13 @@
   		<script src="components/listview.js"></script>
   		<script src="components/rating.js"></script>
   		<script src="components/processbar.js"></script>
+  		<script src="webfontloader.js"></script>
+      <style type="text/css">
+        @font-face {
+          font-family:"My Font";
+          src:url("theme/AlexBrush-Regular.ttf");
+        }
+      </style>
     </head>
     <body>
 
@@ -27,11 +34,11 @@
     //window.onload = function() {
       var game = new Phaser.Game(480, 320, Phaser.CANVAS, '');
       game.gui=new RSGUI(game);
-      game.gui.loadTheme('theme/theme.json');
       first_state={
         preload:function() {
-          game.gui.loadAsset();
-		  game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;//SHOW_ALL;
+          //game.gui.loadAsset();
+          game.gui.loadTheme('theme/theme.json');
+		      //game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;//SHOW_ALL;
         },
         create:function() {
           game.stage.backgroundColor = 0xcccccc;
@@ -47,13 +54,12 @@
           var button8=game.gui.add.tooltip(30,20,'this is a tip\n with two lines',mywin);
           var button9=game.gui.add.scrollbar(350,10,20,180,'vertical',mywin);
           //var button19=game.gui.add.scrollbar(20,180,300,20,'horizontal',mywin);
-          var button16=game.gui.add.processbar(20,180,300,20,'horizontal',mywin);
+          //var button16=game.gui.add.processbar(20,180,300,20,'horizontal',mywin);
           var button10=game.gui.add.listview(240,10,100,100,mywin);
           var button11=game.gui.add.button(-20,0,"this is a wide button",button10);
           var button12=game.gui.add.button(-20,40,"this is a wide button",button10);
           var button7=game.gui.add.dropdown(20,80,"text",mywin);
-          button16.setValue(50);
-		  mywin.input.enableDrag();
+          mywin.input.enableDrag();
           //button3.group='group1';
           //mywin.show();
           button2.events.onInputDown.add(function(){

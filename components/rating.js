@@ -51,6 +51,9 @@ Rating.prototype.fit=function(){
 	width = height*this._stars;
 	this.resize(parseInt(width),parseInt(height));
 }
+Rating.prototype.getType=function(){
+	return 'rating';
+}
 Rating.prototype.getValue=function(){
 	return this._stared;
 }

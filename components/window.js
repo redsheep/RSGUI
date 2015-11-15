@@ -36,9 +36,8 @@ Window.prototype.draw=function(){
 		this._bmd.ctx.strokeBorder(b);
 	}else{
 		//draw with background texture
-		var W=this.game.cache.getImage(this._window_bg).width;
-		var H=this.game.cache.getImage(this._window_bg).height;
-		this._bmd.generateNinePatchTexture(this._window_bg,0,th/2,w,h-th/2,r,W,H);
+		var texture = this._texture['bg'];
+		this._bmd.generateNinePatchTexture(texture.key,0,th/2,w,h-th/2,r,texture.width,texture.height);
 	}
 	//draw titlebar of window
 	if(!this._hasTexture){
@@ -52,16 +51,19 @@ Window.prototype.draw=function(){
 		this._bmd.ctx.strokeBorder(b);
 	}else{
 		//draw with titlebar texture
-		var TW=this.game.cache.getImage(this._window_title).width;
-		var TH=this.game.cache.getImage(this._window_title).height;
-		var TX=this._width/2-TW/2;
-		this._bmd.horizontalThreePatchTexture(this._window_title,0,0,w,th,TH,TW,TH);
+		var texture = this._texture['title'];
+		var TX=this._width/2-texture.width/2;
+		this._bmd.horizontalThreePatchTexture(texture.key,
+			0,0,w,th,texture.height,texture.width,texture.height);
 	}
 	//draw title text
 	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='middle';
 	this._bmd.ctx.fillText(this._title, r+b, th/2);
+}
+Window.prototype.getType=function(){
+	return 'window';
 }
 Window.prototype.addChild=function(object){
 	GUIContainer.prototype.addChild.call(this,object);

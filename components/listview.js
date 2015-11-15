@@ -19,3 +19,6 @@ ListView.prototype.draw=function(){
 	this._bmd.ctx.fill();
 	this._bmd.ctx.strokeBorder(b);
 }
+ListView.prototype.getType=function(){
+	return 'listview';
+}
