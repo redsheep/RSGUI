@@ -22,6 +22,7 @@ GUIObject = function (game, x, y, width, height) {
 	this._warp=false;
 	this._font={'family':'Arial','size':16,'color':'#000'};
 	this.inputEnabled = true;
+	this._redraw=true;
 	//Redirect the input events to here so we can handle animation updates, etc
 	//this.events.onInputOver.add(this.onInputOverHandler, this);
 	//this.events.onInputOut.add(this.onInputOutHandler, this);
@@ -35,7 +36,10 @@ GUIObject = function (game, x, y, width, height) {
 GUIObject.prototype = Object.create(Phaser.Sprite.prototype);
 GUIObject.prototype.constructor = GUIObject;
 GUIObject.prototype.update = function() {
-	this.draw();
+	if(this._redraw){
+		this.draw();
+		this._redraw=false;
+	}
 };
 
 GUIObject.prototype.draw=function(){ }
@@ -59,6 +63,7 @@ GUIObject.prototype.onInputDownHandler = function (sprite, pointer) {
 	if (this.onInputDown)this.onInputDown.dispatch(this, pointer);
 	this._state='down';
 	this.focus();
+	this._redraw=true;
 };
 
 GUIObject.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
@@ -66,6 +71,7 @@ GUIObject.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 	if (this.onInputUp)	this.onInputUp.dispatch(this, pointer, isOver);
 	if (this.freezeFrames) return;
 	this._state='up';
+	this._redraw=true;
 };
 GUIObject.prototype.focus=function(){
 	this._focus=true;

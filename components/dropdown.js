@@ -21,6 +21,7 @@ DropDown.prototype.update = function() {
   this._outbounds=true;
   else this._outbounds=false;
   this._over=Math.min(Math.max(this._over,0), this._options.length-1);
+  this._redraw=true;
   GUIObject.prototype.update.call(this);
 };
 DropDown.prototype.draw=function(){

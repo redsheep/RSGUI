@@ -35,6 +35,7 @@ TextInput = function (game, x, y,text) {
 		var offset=Math.max(0,textwidth-w+2*r+2*b);
 		self._cursor=getTextSize(self._font.family,self._font.size,
 		 				self._text.substring(0,pos)).width-offset+r+b;
+		self._redraw=true;
 	});
 };
 TextInput.prototype = Object.create(GUIObject.prototype);

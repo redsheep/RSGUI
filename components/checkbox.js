@@ -5,8 +5,6 @@ CheckBox = function (game, x, y, text) {
 	this._seprate=2;
 	this._text=text;
 	this._check=false;
-	this._onFrame = "rsgui-checkbox-on";
-	this._offFrame = "rsgui-checkbox-off";
 	this._frame='on';
 };
 CheckBox.prototype = Object.create(GUIObject.prototype);
@@ -14,8 +12,8 @@ CheckBox.prototype.constructor = CheckBox;
 CheckBox.prototype.draw=function(){
 	var b=this._border;
 	var r=this._radius;
-	var w=this.width/this.scale.x;
-	var h=this.height/this.scale.y;
+	var w=this._originWidth;
+	var h=this._originHeight;
 	var c=h+this._seprate;
 	var fontcolor=this._font.color;
 	var font=this.getFont();
@@ -36,7 +34,7 @@ CheckBox.prototype.draw=function(){
 		}
 	}else{
 		var texture=this._texture[this._frame];
-		this._bmd.copy(texture.key,0,0,texture.width,texture.height,0,0,h,h);
+		this._bmd.copy(texture.key,0,0,texture.width,texture.height,r,r,h-2*r,h-2*r);
 	}
 	//draw text
 	this._bmd.ctx.font=font;

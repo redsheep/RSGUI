@@ -36,7 +36,7 @@ RadioBox.prototype.draw=function(){
 		}
 	}else{
 		var texture = this._texture[this._frame];
-		this._bmd.copy(texture.key,0,0,texture.width,texture.height,0,0,h,h);
+		this._bmd.copy(texture.key,0,0,texture.width,texture.height,r,r,h-2*r,h-2*r);
 	}
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.fillStyle=fontcolor;

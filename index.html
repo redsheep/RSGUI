@@ -3,7 +3,8 @@
     <head>
       <meta charset="UTF-8" />
       <title>hello phaser!</title>
-      <script src="phaser.min.js"></script>
+      <script src="3rdparty/phaser.min.js"></script>
+  		<script src="3rdparty/webfontloader.js"></script>
   		<script src="guiFactory.js"></script>
   		<script src="guiObject.js"></script>
   		<script src="guiContainer.js"></script>
@@ -20,7 +21,6 @@
   		<script src="components/listview.js"></script>
   		<script src="components/rating.js"></script>
   		<script src="components/processbar.js"></script>
-  		<script src="webfontloader.js"></script>
       <style type="text/css">
         @font-face {
           font-family:"My Font";
@@ -36,7 +36,7 @@
       game.gui=new RSGUI(game);
       first_state={
         preload:function() {
-          game.gui.loadTheme('theme/theme.json');
+          //game.gui.loadTheme('theme/theme.json');
 		      //game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;//SHOW_ALL;
         },
         create:function() {
