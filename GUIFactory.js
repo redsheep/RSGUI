@@ -79,8 +79,8 @@ GUIFactory.prototype = {
     this.setObjectTheme(object,'toggle');
 		return object;
 	},
-	tooltip:function(x,y,text,container){
-		var object = new ToolTip(this.game,x,y,text);
+	tooltip:function(x,y,text,direct,container){
+		var object = new ToolTip(this.game,x,y,text,direct);
 		this.addToGroup(container,object);
     this.setObjectTheme(object,'tooltip');
 		return object;
