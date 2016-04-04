@@ -4,12 +4,13 @@ DropDown = function (game, x, y, text) {
   this._extendWidth=48;
   this._text=text;
   this._dropdown=false;
-  this._options=['option1','option2000000','option3','option4'];
+  this._options=[text];
   this._selected=this._options[0];
   this._over=0;
   this._outbounds=true;
   this._bgFrame='rsgui-dropdown-bg';
   this._arrow={width:16,height:8};
+  this.onSelect=new Phaser.Signal();
 };
 DropDown.prototype = Object.create(GUIObject.prototype);
 DropDown.prototype.constructor = DropDown;
@@ -100,13 +101,14 @@ DropDown.prototype.onInputDownHandler = function (sprite, pointer) {
     this._selected=this._options[this._over];
     this._dropdown=false;
     this._bmd.resize(Math.floor(this.width), 2*r+2*b+this._font.size);
+    this.onSelect.dispatch(this._selected,this);
   }else{
     this._dropdown=true;
     this._bmd.resize(Math.floor(this.width),
 			this.height+this._font.size*(this._options.length)+4*r+4*b);
   }
   if (this.onInputDown)
-  this.onInputDown.dispatch(this, pointer);
+    this.onInputDown.dispatch(this, pointer);
   GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 };
 DropDown.prototype.getType=function(){

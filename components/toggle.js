@@ -10,6 +10,7 @@ ToggleButton = function (game, x, y) {
 	this._onColor='#ccc';
 	this._offColor='#999';
 	this._check=false;
+	this.onChange=new Phaser.Signal();
 };
 ToggleButton.prototype = Object.create(GUIObject.prototype);
 ToggleButton.prototype.constructor = ToggleButton;
@@ -66,6 +67,7 @@ ToggleButton.prototype.onInputDownHandler = function (sprite, pointer) {
 		this._color=this._onColor;
 	}
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
+	this.onChange.dispatch();
 };
 ToggleButton.prototype.getType=function(){
 	return 'toggle';

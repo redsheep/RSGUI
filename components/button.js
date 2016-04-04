@@ -7,6 +7,7 @@ Button = function (game, x, y, text) {
 	this._frame='up';
 	this._upColor='#ccc';
 	this._downColor='#333';
+	this.onClick=new Phaser.Signal();
 };
 Button.prototype = Object.create(GUIObject.prototype);
 Button.prototype.constructor = Button;
@@ -54,6 +55,7 @@ Button.prototype.onInputDownHandler = function (sprite, pointer) {
 Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 	this._frame='up';
 	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer);
+	this.onClick.dispatch(pointer,this);
 };
 Button.prototype.setTheme=function(theme){
 	GUIObject.prototype.setTheme.call(this,theme);
