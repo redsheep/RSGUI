@@ -1,12 +1,19 @@
 
-TextInput = function (game, x, y,text) {
+TextInput = function (game, x, y, text, type) {
 
 	GUIObject.call(this, game, x, y);
-
-	this._text=text;
+	if(typeof(type)=='undefined')
+		type="text";
+	this._value=text;
+	this._type=type;
 	this._minWidth=80;
 	this._focus=false;
 	this._bgFrame="rsgui-textinput-bg";
+	if(this._type=="password"){
+		this._text=Array(this._value.length+1).join('*')
+	}else{
+		this._text=this._value;
+	}
 	// create the hidden input element
 	var self=this;
 	this._hiddenInput = document.createElement('input');
@@ -29,7 +36,14 @@ TextInput = function (game, x, y,text) {
 		var b=self._border;
 		var r=self._radius;
 		var w=self._originWidth;
-		self._text=this.value;
+		if(self._type=="password"){
+			self._text=Array(this.value.length+1).join('*')
+			self._value=this.value;
+		}else{
+			self._value=this.value;
+			self._text=this.value;
+		}
+		self.onChange.dispatch(self._value,self);
 		var textwidth=getTextSize(self._font.family,self._font.size, self._text ).width;
 		var pos=this.selectionStart;
 		var offset=Math.max(0,textwidth-w+2*r+2*b);
@@ -37,6 +51,7 @@ TextInput = function (game, x, y,text) {
 		 				self._text.substring(0,pos)).width-offset+r+b;
 		self._redraw=true;
 	});
+	this.onChange=new Phaser.Signal();
 };
 TextInput.prototype = Object.create(GUIObject.prototype);
 TextInput.prototype.constructor = TextInput;
@@ -122,9 +137,9 @@ TextInput.prototype.getType=function(){
 	return 'textinput';
 }
 TextInput.prototype.getValue=function(){
-	return this._text;
+	return this._value;
 }
-TextInput.prototype.setText=function(text){
-	this._text=text;
+TextInput.prototype.setValue=function(value){
+	this._value=value;
 	this.fit();
 }
