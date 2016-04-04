@@ -11,7 +11,7 @@ RadioBox = function (game, x, y, text) {
 	this.onChange =new Phaser.Signal();
 };
 RadioBox.prototype = Object.create(GUIObject.prototype);
-RadioBox.prototype.constructor = CheckBox;
+RadioBox.prototype.constructor = RadioBox;
 RadioBox.prototype.draw=function(){
 	var b=this._border;
 	var r=this._radius;
@@ -54,11 +54,14 @@ RadioBox.prototype.getType=function(){
 RadioBox.prototype.check=function(){
 	this._check=true;
 	this._frame='on';
+	this._redraw=true;
 	if(this.parent!=null){
 		for(i=0;i<this.parent.children.length;i++){
 			var child=this.parent.children[i];
 			if(child!=this &&child.group==this.group){
-				if(child instanceof RadioBox) child.uncheck();
+				if(child instanceof RadioBox){
+					child.uncheck();
+				}
 			}
 		}
 	}
@@ -66,6 +69,7 @@ RadioBox.prototype.check=function(){
 RadioBox.prototype.uncheck=function(){
 	this._check=false;
 	this._frame='off';
+	this._redraw=true;
 }
 RadioBox.prototype.setTheme=function(theme){
 	this._checkColor=theme.check;
