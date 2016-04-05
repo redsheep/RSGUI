@@ -24,6 +24,7 @@ Button.prototype.draw=function(){
 	this._bmd.ctx.strokeStyle = this._borderColor;
 	//draw button background
 	if(!this._hasTexture){// && texture){
+		this._bmd.ctx.globalCompositeOperation = "multiply";
 		if(this._state=='down'){
 			this._bmd.ctx.fillStyle = this._downColor;
 		}else{
@@ -32,6 +33,9 @@ Button.prototype.draw=function(){
 			my_gradient.addColorStop(1,this._downColor);
 			this._bmd.ctx.fillStyle = my_gradient;
 		}
+		this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
+		this._bmd.ctx.fill();
+		this._bmd.ctx.fillStyle = this._color;
 		this._bmd.ctx.roundRect(b, b, w-2*b, h-2*b, r, true);
 		this._bmd.ctx.fill();
 		this._bmd.ctx.strokeBorder(b);
