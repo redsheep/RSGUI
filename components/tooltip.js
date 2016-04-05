@@ -1,13 +1,20 @@
-
+ToolTipDirect={
+  Top:'top',
+  Bottom:'bottom',
+  Left:'left',
+  Right:'right'
+}
 ToolTip = function (game, x, y,text,direct) {
   GUIObject.call(this, game, x, y);
   this._text=text;
   this._warp=true;
   this._direct=direct||'top';
-  this._arrow={top:0,down:0,left:0,right:0};
+  this._arrow={top:0,bottom:0,left:0,right:0};
   this._arrow[direct]=10;
-  this._extendHeight=this._arrow.top+this._arrow.down;
+  this._extendHeight=this._arrow.top+this._arrow.bottom;
   this._extendWidth=this._arrow.left+this._arrow.right;
+
+  this.onPopup =new Phaser.Signal();
 };
 ToolTip.prototype = Object.create(GUIObject.prototype);
 ToolTip.prototype.constructor = ToolTip;
@@ -26,7 +33,7 @@ ToolTip.prototype.draw=function(){
 	this._bmd.ctx.beginPath();
 	this._bmd.ctx.moveTo(b+a.left, r+a.top);
 	this._bmd.ctx.quadraticCurveTo(b+a.left, a.top, r+a.left, a.top);
-  if(this._direct=='up'){
+  if(this._direct=='top'){
   	this._bmd.ctx.lineTo(w/2-a.top/2, a.top);
   	this._bmd.ctx.lineTo(w/2, b);
   	this._bmd.ctx.lineTo(w/2+a.top/2, a.top);
@@ -38,15 +45,15 @@ ToolTip.prototype.draw=function(){
   	this._bmd.ctx.lineTo(w, h/2);
   	this._bmd.ctx.lineTo(w-a.right, h/2+a.right/2);
   }
-	this._bmd.ctx.lineTo(w-a.right, h-r-a.down);
-	this._bmd.ctx.quadraticCurveTo(w-a.right, h-a.down, w-r-a.right, h-a.down);
-  if(this._direct=='down'){
-  	this._bmd.ctx.lineTo(w/2+a.down/2, h-a.down);
+	this._bmd.ctx.lineTo(w-a.right, h-r-a.bottom);
+	this._bmd.ctx.quadraticCurveTo(w-a.right, h-a.bottom, w-r-a.right, h-a.bottom);
+  if(this._direct=='bottom'){
+  	this._bmd.ctx.lineTo(w/2+a.bottom/2, h-a.bottom);
   	this._bmd.ctx.lineTo(w/2, h-b);
-  	this._bmd.ctx.lineTo(w/2-a.down/2, h-a.down);
+  	this._bmd.ctx.lineTo(w/2-a.bottom/2, h-a.bottom);
   }
-	this._bmd.ctx.lineTo(r+a.left, h-a.down);
-	this._bmd.ctx.quadraticCurveTo(b+a.left, h-a.down, b+a.left, h - r-a.down);
+	this._bmd.ctx.lineTo(r+a.left, h-a.bottom);
+	this._bmd.ctx.quadraticCurveTo(b+a.left, h-a.bottom, b+a.left, h - r-a.bottom);
   if(this._direct=='left'){
   	this._bmd.ctx.lineTo(b+a.left, h/2+a.left/2);
   	this._bmd.ctx.lineTo(b, h/2);
