@@ -27,9 +27,9 @@ GUIContainer.prototype.update = function() {
 		hitChild=this.getHitChild(this.game.input.mousePointer);
 		if(this._overChild!=hitChild){
 			if(this._overChild!=null && this._overChild.events._onInputOut!=null)
-				this._overChild.onInputOutHandler(this._overChild,this.game.input.mousePointer);
+				this._overChild.events._onInputOut.dispatch(this._overChild,this.game.input.mousePointer);
 			if(hitChild!=null && hitChild.events._onInputOver!=null)
-				hitChild.onInputOverHandler(hitChild,this.game.input.mousePointer);
+				hitChild.events._onInputOver.dispatch(hitChild,this.game.input.mousePointer);
 		}
 		this._overChild=hitChild;
 	}
@@ -69,7 +69,7 @@ GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
 	GUIObject.prototype.onInputDownHandler.call(this,sprite,pointer);
 	this._downChild=this.getHitChild(pointer);
 	if(this._downChild!=null){
-		this._downChild.onInputDownHandler(this._downChild,pointer);
+		this._downChild.events._onInputDown.dispatch(this._downChild,pointer);
 		if(this.input.draggable) this.input.isDragged=true;//disableDrag();
 	}else {
 		if(this.input.draggable) this.input.isDragged=false;
@@ -78,13 +78,13 @@ GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
 GUIContainer.prototype.onInputUpHandler=function(sprite,pointer){
 	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer);
 	if(this._downChild!=null)
-		this._downChild.onInputUpHandler(this._downChild,pointer);
+		this._downChild.events._onInputUp.dispatch(this._downChild,pointer);
 	this._downChild=null;
 }
 GUIContainer.prototype.onInputOutHandler=function(sprite,pointer){
 	GUIObject.prototype.onInputOutHandler.call(this,sprite,pointer);
 	if(this._overChild!=null && this._overChild.events._onInputOut!=null)
-		this._overChild.onInputOutHandler(this._overChild,pointer);
+		this._overChild.events._onInputOut.dispatch(this._overChild,pointer);
 	this._overChild=null;
 }
 GUIContainer.prototype.addChild=function(object){
