@@ -6,7 +6,7 @@ CheckBox = function (game, x, y, text) {
 	this._text=text;
 	this._check=false;
 	this._frame='on';
-	this.onCheck=new Phaser.Signal();
+	this.onChange=new Phaser.Signal();
 };
 CheckBox.prototype = Object.create(GUIObject.prototype);
 CheckBox.prototype.constructor = CheckBox;
@@ -55,11 +55,13 @@ CheckBox.prototype.check=function(){
 	this._check=true;
 	this._frame='on';
 	this._redraw=true;
+	this.onChange.dispatch(true);
 }
 CheckBox.prototype.uncheck=function(){
 	this._check=false;
 	this._frame='off';
 	this._redraw=true;
+	this.onChange.dispatch(false);
 }
 CheckBox.prototype.setTheme=function(theme){
 	this._checkColor=theme.check;
