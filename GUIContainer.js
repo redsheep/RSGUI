@@ -75,10 +75,10 @@ GUIContainer.prototype.onInputDownHandler=function(sprite,pointer){
 		if(this.input.draggable) this.input.isDragged=false;
 	}
 }
-GUIContainer.prototype.onInputUpHandler=function(sprite,pointer){
-	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer);
+GUIContainer.prototype.onInputUpHandler=function(sprite,pointer,isOver){
+	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer,isOver);
 	if(this._downChild!=null)
-		this._downChild.events._onInputUp.dispatch(this._downChild,pointer);
+		this._downChild.events._onInputUp.dispatch(this._downChild,pointer,this.hitTest(pointer,this._downChild));
 	this._downChild=null;
 }
 GUIContainer.prototype.onInputOutHandler=function(sprite,pointer){

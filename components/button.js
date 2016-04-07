@@ -5,8 +5,8 @@ Button = function (game, x, y, text) {
 	this._upFrame='rsgui-button-up';
 	this._downFrame='rsgui-button-down';
 	this._frame='up';
-	this._upColor='#ccc';
-	this._downColor='#333';
+	this._upColor='#ececec';
+	this._downColor='#d5d5d5';
 	this.onClick=new Phaser.Signal();
 };
 Button.prototype = Object.create(GUIObject.prototype);
@@ -59,12 +59,10 @@ Button.prototype.onInputDownHandler = function (sprite, pointer) {
 Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 	this._frame='up';
 	GUIObject.prototype.onInputUpHandler.call(this,sprite,pointer);
-	this.onClick.dispatch(pointer,this);
+	if(isOver) this.onClick.dispatch(pointer,this);
 };
 Button.prototype.setTheme=function(theme){
 	GUIObject.prototype.setTheme.call(this,theme);
-	this._upColor=theme.up;
-	this._downColor=theme.down;
 }
 Button.prototype.setText=function(text){
 	this._text=text;
