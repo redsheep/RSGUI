@@ -42,6 +42,11 @@ CheckBox.prototype.draw=function(){
 	this._bmd.ctx.fillStyle=fontcolor;
 	this._bmd.ctx.textBaseline="middle"
 	this._bmd.ctx.fillText(this._text, c, h/2);
+	if(!this._enabled){
+		this._bmd.ctx.globalCompositeOperation = "source-atop";
+		this._bmd.ctx.fillStyle='rgba(192,192,192,0.5)';
+		this._bmd.ctx.fillRect(0,0,w,h);
+	}
 }
 CheckBox.prototype.onInputDownHandler = function (sprite, pointer) {
 	if(this._check) this.uncheck();

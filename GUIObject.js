@@ -21,6 +21,7 @@ GUIObject = function (game, x, y, width, height) {
 	this._autofit=true;
 	this._warp=false;
 	this._font={'family':'Arial','size':16,'color':'#000'};
+	this._enabled=true;
 	this.inputEnabled = true;
 	this._redraw=true;
 	//Redirect the input events to here so we can handle animation updates, etc
@@ -60,7 +61,8 @@ GUIObject.prototype.onInputOutHandler = function (sprite, pointer) {
 
 GUIObject.prototype.onInputDownHandler = function (sprite, pointer) {
 
-	if (this.onInputDown)this.onInputDown.dispatch(this, pointer);
+	if (this.onInputDown)
+		this.onInputDown.dispatch(this, pointer);
 	this._state='down';
 	this.focus();
 	this._redraw=true;
@@ -68,7 +70,8 @@ GUIObject.prototype.onInputDownHandler = function (sprite, pointer) {
 
 GUIObject.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 
-	if (this.onInputUp)	this.onInputUp.dispatch(this, pointer, isOver);
+	if (this.onInputUp)
+		this.onInputUp.dispatch(this, pointer, isOver);
 	if (this.freezeFrames) return;
 	this._state='up';
 	this._redraw=true;
@@ -163,4 +166,12 @@ GUIObject.prototype.getFont=function(){
 }
 GUIObject.prototype.setBGColor=function(color){
 	this._color=color;
+}
+GUIObject.prototype.enable=function(){
+	this._enabled=true;
+	this.inputEnabled=true;
+}
+GUIObject.prototype.disable=function(){
+	this._enabled=false;
+	this.inputEnabled=false;
 }

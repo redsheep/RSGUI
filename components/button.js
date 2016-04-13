@@ -25,7 +25,7 @@ Button.prototype.draw=function(){
 	//draw button background
 	if(!this._hasTexture){// && texture){
 		this._bmd.ctx.globalCompositeOperation = "multiply";
-		if(this._state=='down'){
+		if(this._state=='down'||!this._enabled){
 			this._bmd.ctx.fillStyle = this._downColor;
 		}else{
 			var my_gradient = this._bmd.ctx.createLinearGradient(0,0,0,50);
@@ -48,6 +48,11 @@ Button.prototype.draw=function(){
 	this._bmd.ctx.font=font;
 	this._bmd.ctx.textBaseline='top';
 	this._bmd.ctx.fillText(this._text, b+r, b+r);
+	if(!this._enabled){
+		this._bmd.ctx.globalCompositeOperation = "source-atop";
+		this._bmd.ctx.fillStyle='rgba(192,192,192,0.5)';
+		this._bmd.ctx.fillRect(0,0,w,h);
+	}
 };
 Button.prototype.getType=function(){
 	return 'button';
