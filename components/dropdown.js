@@ -11,6 +11,10 @@ DropDown = function (game, x, y, text) {
   this._bgFrame='rsgui-dropdown-bg';
   this._arrow={width:16,height:8};
   this.onSelect=new Phaser.Signal();
+  this.onChange=new Phaser.Signal();
+  this.onDataBound=new Phaser.Signal();
+  this.onShow=new Phaser.Signal();
+  this.onHide=new Phaser.Signal();
 };
 DropDown.prototype = Object.create(GUIObject.prototype);
 DropDown.prototype.constructor = DropDown;
@@ -67,7 +71,7 @@ DropDown.prototype.draw=function(){
 						textheight*this._options.length+2*r,r,texture.width,texture.height);
 		}
 		this._bmd.ctx.fillStyle=this._selectColor;
-		this._bmd.ctx.fillRect(b,r+b+this._over*textheight+2*r+2*b+textheight,w-2*b,textheight);
+		this._bmd.ctx.fillRect(b+b/2,r+b+this._over*textheight+2*r+2*b+textheight,w-3*b,textheight);
 		//draw options text
 		this._bmd.ctx.save();
 		this._bmd.ctx.font=font;
@@ -102,10 +106,12 @@ DropDown.prototype.onInputDownHandler = function (sprite, pointer) {
     this._dropdown=false;
     this._bmd.resize(Math.floor(this.width), 2*r+2*b+this._font.size);
     this.onSelect.dispatch(this._selected,this);
+    this.onHide.dispatch();
   }else{
     this._dropdown=true;
     this._bmd.resize(Math.floor(this.width),
 			this.height+this._font.size*(this._options.length)+4*r+4*b);
+    this.onShow.dispatch();
   }
   if (this.onInputDown)
     this.onInputDown.dispatch(this, pointer);
@@ -128,9 +134,11 @@ DropDown.prototype.getValue=function(){
 }
 DropDown.prototype.setValue=function(array){
 	this._options=array;
+  this.onDataBound.dispatch();
 }
 DropDown.prototype.appendValue=function(data){
 	this._options.push(data);
+  this.onChange.dispatch();
 }
 DropDown.prototype.removeValue=function(data){
 	// Find and remove item from an array
