@@ -55,7 +55,20 @@ TextInput = function (game, x, y, text, type) {
 };
 TextInput.prototype = Object.create(GUIObject.prototype);
 TextInput.prototype.constructor = TextInput;
-
+TextInput.prototype.update=function(){
+	GUIObject.prototype.update.call(this);
+	var b=this._border;
+	var r=this._radius;
+	var w=this._originWidth;
+	var h=this._originHeight;
+	if(this._focus && this._delay++%66<33){
+		this._bmd.ctx.fillStyle=this._font.color;
+		this._bmd.ctx.fillRect(this._cursor,r+b,0.1, h-2*r-2*b);
+	}else{
+		this._bmd.ctx.fillStyle=this._color;
+		this._bmd.ctx.fillRect(this._cursor,r+b,0.1, h-2*r-2*b);
+	}
+}
 TextInput.prototype.draw=function(){
 	var b=this._border;
 	var r=this._radius;
@@ -92,9 +105,6 @@ TextInput.prototype.draw=function(){
 	this._bmd.ctx.restore();
 	//draw cursor
 	this._bmd.ctx.fillStyle=fontcolor;
-	if(this._focus && this._delay++%66<33){
-		this._bmd.ctx.fillRect(this._cursor,r+b,1, h-2*r-2*b);
-	}
 }
 TextInput.prototype.getCursorPos=function(pos){
 	var sx=this.scale.x;
