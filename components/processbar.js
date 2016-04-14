@@ -13,7 +13,8 @@ ProcessBar = function (game, x, y, width, height, type) {
 	this._btnFrame='rsgui-processbar-btn';
 	this._downoffset=0;
 
-	this.onChange =new Phaser.Signal();
+	this.onChange = new Phaser.Signal();
+	this.onComplete = new Phaser.Signal();
 };
 ProcessBar.prototype = Object.create(GUIObject.prototype);
 ProcessBar.prototype.constructor = ProcessBar;
@@ -74,6 +75,9 @@ ProcessBar.prototype.setValue=function(value){
 	else
 		maxposition=this.width-this._radius/2-this._border;
 	this._position=((value-this._range.min)/(this._range.max-this._range.min))*maxposition;
+	this.onChange.dispatch(value);
+	if(value==this._range.max)
+		this.onComplete.dispatch();
 }
 ProcessBar.prototype.setValueRange=function(minvalue,maxvalue){
 	currentvalue=this.getValue();
