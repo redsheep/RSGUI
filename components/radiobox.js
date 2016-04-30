@@ -57,24 +57,30 @@ RadioBox.prototype.getType=function(){
 	return 'radiobox';
 }
 RadioBox.prototype.check=function(){
-	this._check=true;
-	this._frame='on';
-	this._redraw=true;
-	if(this.parent!=null){
-		for(i=0;i<this.parent.children.length;i++){
-			var child=this.parent.children[i];
-			if(child!=this &&child.group==this.group){
-				if(child instanceof RadioBox){
-					child.uncheck();
+	if(this._enabled && !this._check){
+		this._check=true;
+		this._frame='on';
+		this._redraw=true;
+		this.onChange.dispatch(true);
+		if(this.parent!=null){
+			for(i=0;i<this.parent.children.length;i++){
+				var child=this.parent.children[i];
+				if(child!=this &&child.group==this.group){
+					if(child instanceof RadioBox){
+						child.uncheck();
+					}
 				}
 			}
 		}
 	}
 }
 RadioBox.prototype.uncheck=function(){
-	this._check=false;
-	this._frame='off';
-	this._redraw=true;
+	if(this._enabled && this._check){
+		this._check=false;
+		this._frame='off';
+		this._redraw=true;
+		this.onChange.dispatch(false);
+	}
 }
 RadioBox.prototype.setTheme=function(theme){
 	this._checkColor=theme.check;

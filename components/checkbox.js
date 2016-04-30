@@ -5,6 +5,8 @@ CheckBox = function (game, x, y, text) {
 	this._seprate=2;
 	this._text=text;
 	this._check=false;
+	this._onFrame = "rsgui-radiobox-on";
+	this._offFrame = "rsgui-radiobox-off";
 	this._frame='on';
 	this.onChange=new Phaser.Signal();
 };
@@ -57,16 +59,20 @@ CheckBox.prototype.getType=function(){
 	return 'checkbox';
 }
 CheckBox.prototype.check=function(){
-	this._check=true;
-	this._frame='on';
-	this._redraw=true;
-	this.onChange.dispatch(true);
+	if(this._enabled && !this._check){
+		this._check=true;
+		this._frame='on';
+		this._redraw=true;
+		this.onChange.dispatch(true);
+	}
 }
 CheckBox.prototype.uncheck=function(){
-	this._check=false;
-	this._frame='off';
-	this._redraw=true;
-	this.onChange.dispatch(false);
+	if(this._enabled && this._check){
+		this._check=false;
+		this._frame='off';
+		this._redraw=true;
+		this.onChange.dispatch(false);
+	}
 }
 CheckBox.prototype.setTheme=function(theme){
 	this._checkColor=theme.check;
