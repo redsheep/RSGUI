@@ -101,7 +101,7 @@ RSGUI.prototype.loadTheme=function(theme){
   	xobj.overrideMimeType("application/json");
   	xobj.open('GET', url, true);
   	xobj.onreadystatechange = function () {
-  		if (xobj.readyState == 4 && xobj.status == "200") {
+  		if (xobj.readyState == 4 && (xobj.status == "200"||xobj.status == "0")) {
   			theme=JSON.parse(xobj.responseText);
   			theme.path=url.substring(0, url.lastIndexOf("/") + 1);
   			self.add.setTheme(theme);

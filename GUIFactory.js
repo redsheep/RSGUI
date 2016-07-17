@@ -26,6 +26,12 @@ GUIFactory.prototype = {
     this.setObjectTheme(object,'button');
 		return object;
 	},
+	roundbutton:function(x,y,text,container){
+		var object = new RoundButton(this.game,x,y,text);
+		this.addToGroup(container,object);
+    this.setObjectTheme(object,'button');
+		return object;
+	},
 	checkbox:function(x,y,text,container){
 		var object = new CheckBox(this.game,x,y,text);
 		this.addToGroup(container,object);
@@ -33,12 +39,13 @@ GUIFactory.prototype = {
 		return object;
 	},
 	label:function(x,y,text,container){
-		var object = new Phaser.Text(this.game,x,y,text);
+		var object = new Label(this.game,x,y,text);
 		this.addToGroup(container,object);
+    this.setObjectTheme(object,'label');
 		return object;
 	},
-	textinput:function(x,y,text,container){
-		var object = new TextInput(this.game,x,y,text);
+	textinput:function(x,y,text,type,container){
+		var object = new TextInput(this.game,x,y,text,type);
 		this.addToGroup(container,object);
     this.setObjectTheme(object,'textinput');
 		return object;
@@ -172,6 +179,14 @@ GUIFactory.prototype = {
 }
 GUIFactory.prototype.getDefaultTheme=function(){
   return {
+		'label':{
+      'radius':10,
+      'bgcolor':'#ddd',
+      'headerheight':32,
+      'headercolor':'#333',
+      'border':'1px #fff',
+			'font':'Arial 16px #000'
+		},
     'window':{
       'radius':10,
       'bgcolor':'#ddd',
@@ -184,12 +199,17 @@ GUIFactory.prototype.getDefaultTheme=function(){
       'radius':10,
       'bgcolor':'#ccc',
       'border':'0px #fff',
-      'font':'Arial 16px #000'
+      'font':'Arial 16px #000',
+			'item':{
+	      'radius':5,
+	      'height':40,
+	      'border':'2px #fff',
+	      'font':'Arial 16px #000'
+	    },
     },
     'button':{
       'radius':10,
-      'up':'#fff',
-      'down':'#999',
+      'bgcolor':'#eee',
       'border':'2px #fff',
       'font':'Arial 16px #000'
     },
@@ -237,7 +257,7 @@ GUIFactory.prototype.getDefaultTheme=function(){
     'toggle':{
       'radius':10,
       'bgcolor':'#ccc',
-	  'toggle':'#fff',
+	  	'toggle':'#fff',
       'button':'#999',
       'border':'2px #fff',
       'font':'Arial 16px #000'
@@ -248,7 +268,7 @@ GUIFactory.prototype.getDefaultTheme=function(){
       'border':'2px #fff',
       'font':'Arial 16px #000'
     },
-	'rating':{
+		'rating':{
       'radius':16,
       'bgcolor':'#ccc',
       'border':'2px #fff',

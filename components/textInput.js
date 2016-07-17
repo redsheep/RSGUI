@@ -20,8 +20,8 @@ TextInput = function (game, x, y, text, type) {
 	this._hiddenInput.type = 'text';
 	this._hiddenInput.style.position = 'absolute';
 	this._hiddenInput.style.opacity = 0;
-	this._hiddenInput.style.left='0px';//(this.world.x+radius+border)+'px';
-	this._hiddenInput.style.top='0px';//(this.world.y+radius+border-30)+'px';
+	this._hiddenInput.style.left=this.game.canvas.offsetLeft+'px';
+	this._hiddenInput.style.top=this.game.canvas.offsetTop+'px';
 	this._hiddenInput.style.width='1px';
 	this._hiddenInput.style.height='1px';
 	this._hiddenInput.value=text;
@@ -63,10 +63,10 @@ TextInput.prototype.update=function(){
 	var h=this._originHeight;
 	if(this._focus && this._delay++%66<33){
 		this._bmd.ctx.fillStyle=this._font.color;
-		this._bmd.ctx.fillRect(this._cursor,r+b,0.1, h-2*r-2*b);
+		this._bmd.ctx.fillRect(this._cursor,r+b,0.2, this._font.size);
 	}else{
 		this._bmd.ctx.fillStyle=this._color;
-		this._bmd.ctx.fillRect(this._cursor,r+b,0.1, h-2*r-2*b);
+		this._bmd.ctx.fillRect(this._cursor,r+b,0.2, this._font.size);
 	}
 }
 TextInput.prototype.draw=function(){

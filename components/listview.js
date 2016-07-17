@@ -1,9 +1,10 @@
-
-ListView = function (game, x, y, width, height) {
+"use strict";
+function ListView(game, x, y, width, height) {
 
 	GUIContainer.call(this, game, x, y, width, height);
 	this._items=[];
 	this._offset=0;
+	this._swipe=false;
 	this.onSwipe=new Phaser.Signal();
 };
 ListView.prototype = Object.create(GUIContainer.prototype);
@@ -23,28 +24,48 @@ ListView.prototype.draw=function(){
 }
 ListView.prototype.update = function() {
 	if(this._state=='down'){
+		var game = this.game;
 		var py=game.input.activePointer.position.y-game.input.activePointer.positionDown.y;
-		for(i=0;i<this._items.length;i++){
-			this._items[i].position.y=py*0.5+i*this._itemTheme['height']+this._offset;
+		if(Math.abs(py)>20){
+			for(var i=0;i<this._items.length;i++){
+				this._items[i].position.y=py*0.5+i*this._itemTheme['height']+this._offset;
+			}
+			this._swipe=true;
+		}else{
+			this._swipe=false;
 		}
 	}
-	this._redraw=true;
+	//this._redraw=true;
 	GUIContainer.prototype.update.call(this);
 }
-ListView.prototype.onInputUpHandler=function(sprite,pointer,isOver){
-	this._offset=this._items[0].position.y;
-	if(this._offset>0){
-		for(i=0;i<this._items.length;i++){
-			this._items[i].position.y=i*this._itemTheme['height'];
-		}
-		this._offset=0;
+ListView.prototype.onInputDownHandler=function(sprite,pointer,isOver){
+	/*this._state="down";
+	if(this._swipe){
+		return;
 	}else{
-		var minOffset=this._originHeight-this._items.length*this._itemTheme['height'];
-		minOffset=Math.max(minOffset,this._offset);
-		for(i=0;i<this._items.length;i++){
-			this._items[i].position.y=i*this._itemTheme['height']+minOffset;
+		GUIContainer.prototype.onInputDownHandler.call(this,sprite,pointer);
+	}*/
+	GUIContainer.prototype.onInputDownHandler.call(this,sprite,pointer);
+}
+ListView.prototype.onInputOutHandler=function(sprite,pointer){
+
+}
+ListView.prototype.onInputUpHandler=function(sprite,pointer,isOver){
+	if(this._items.length>0){
+		this._offset=this._items[0].position.y;
+		if(this._offset>0){
+			for(var i=0;i<this._items.length;i++){
+				this._items[i].position.y=i*this._itemTheme['height'];
+			}
+			this._offset=0;
+		}else{
+			var minOffset=this._originHeight-this._items.length*this._itemTheme['height'];
+			minOffset=Math.max(minOffset,this._offset);
+			for(var i=0;i<this._items.length;i++){
+				this._items[i].position.y=i*this._itemTheme['height']+minOffset;
+			}
+			this._offset=minOffset;
 		}
-		this._offset=minOffset;
 	}
 	GUIContainer.prototype.onInputUpHandler.call(this,sprite,pointer,isOver);
 }

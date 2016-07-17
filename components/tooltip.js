@@ -14,7 +14,8 @@ ToolTip = function (game, x, y,text,direct) {
   this._extendHeight=this._arrow.top+this._arrow.bottom;
   this._extendWidth=this._arrow.left+this._arrow.right;
 
-  this.onPopup =new Phaser.Signal();
+  this.onShow = new Phaser.Signal();
+  this.onHide = new Phaser.Signal();
 };
 ToolTip.prototype = Object.create(GUIObject.prototype);
 ToolTip.prototype.constructor = ToolTip;

@@ -37,8 +37,8 @@ ScrollBar.prototype.update = function() {
 			this._position=Math.min( Math.max(px, 0),w-bh);
 		}
 		this.onChange.dispatch(this,this._position);
+		this._redraw=true;
 	}
-	this._redraw=true;
 	GUIObject.prototype.update.call(this);
 };
 ScrollBar.prototype.draw=function(){

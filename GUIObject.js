@@ -159,6 +159,7 @@ GUIObject.prototype.resize=function(width,height){
 	if(this._minHeight!=null && this._originHeight<this._minHeight)
 		this._originHeight=this._minHeight;
 	this._bmd.resize(this._originWidth,this._originHeight);
+	this._redraw=true;
 	this.onResize.dispatch(this, width, height);
 }
 GUIObject.prototype.getFont=function(){
