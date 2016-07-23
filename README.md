@@ -21,4 +21,4 @@ GUI library for your Phaser games.
       button1 = game.gui.add.button(0,0,"button");
     }
 
-> **For More Example visit [http://redsheep.github.io/RSGUI/](http://redsheep.github.io/RSGUI/)**
+> **For More Example visit [https://redsheep.github.io/RSGUI-Examples/](https://redsheep.github.io/RSGUI-Examples/)**
